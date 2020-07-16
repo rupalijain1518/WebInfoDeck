@@ -13,7 +13,7 @@ const AuthProvider = (props) => {
     //changed to handleSingin
     console.log('handleSignin!!!!')
     // made signup signin
-    authMethods.signin(inputs.email, inputs.password, setErrors, setToken)
+      authMethods.signin(inputs.email, inputs.password, setErrors, setToken)
     
     console.log(errors, token)
   }

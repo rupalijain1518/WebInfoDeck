@@ -1,52 +1,66 @@
 import React, { Component } from 'react'
+import firebase, { firestore } from 'firebase/app';
+import 'firebase/firestore';
 
-class Users extends Component {
-  render() {
-    return (
-      <div>
-      <table className="table table-striped table-sm">
-            <thead className ="table-striped">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-          <tbody>
-          <tr>
-          <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-          <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
+import * as fire from '../../../config/fire'
+
+class ListUsers extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users : []
+    };
+  }
+   
+counter(){
+
+}
+  componentDidMount() {
+    const db = firebase.firestore();
+        db.collection("users")
+          .get()
+          .then(querySnapshot => {
+            const data = querySnapshot.docs.map(doc => doc.data().toString());
+            console.log(data);
+            this.setState({ users: data });
+          });
+      }
     
-    <tr>
-          <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
+
+  render(){
+    const { users } = this.state;
     
-    <tr>
-          <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
     
-        </tbody>
-      
-      </table>
-      </div>
-      );
+  return (
+    <div>
+    <table className="table table-striped table-sm">
+          <thead className ="table-striped">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">User </th>
+          <th scope="col">Contact</th>
+        </tr>
+      </thead>
+        <tbody>
+        {users.map(pack => (
+
+        <tr key={pack.uid}>
+         <td> {this.counter}</td>
+         <td> {pack.id} </td>
+         <td> <button type="button"  className="btn btn-secondary">
+           Assigned{pack.check}
+           </button>
+            </td>
+         
+         </tr>
+        ))}
+      </tbody>
+    
+    </table>
+    </div>
+
+
+  );
   }
 }
-
-export default Users
+export default ListUsers;

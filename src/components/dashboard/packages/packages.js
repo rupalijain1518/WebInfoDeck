@@ -4,8 +4,6 @@ import ListPackage from './ListPackage'
 
 class Packages extends Component {
   render() {
-    console.log(this.props);
-   const {packages} = this.props;
     return (
       <div className="package container">
         <div className="row">

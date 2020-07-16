@@ -5,6 +5,8 @@ import 'firebase/auth'
 export const authMethods = {
   signin: (email, password, setErrors, setToken) => {
     //change from create users to...
+
+    if( email == 'admin@gmail.com'  && password == 'admin1'){   
     firebase.auth().signInWithEmailAndPassword(email, password) 
       //everything is almost exactly the same as the function above
       .then( async res => {
@@ -12,13 +14,13 @@ export const authMethods = {
           //set token to localStorage 
           await localStorage.setItem('token', token)
           
-          
           setToken(window.localStorage.token)
         })
         .catch(err => {
           setErrors(prev => ([...prev, err.message]))
         })
-      },
+      }
+    },
       //no need for email and password
       signout: (setErrors, setToken) => {
       // signOut is a no argument function

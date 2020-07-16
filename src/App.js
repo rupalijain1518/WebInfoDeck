@@ -11,10 +11,6 @@ import NotFound from './components/misc/notFound';
 import rd from './components/dashboard/retailer/retailerDetails'
 import Users from './components/dashboard/users/listUsers'
 import {firebaseAuth} from './provider/AuthProvider'
-import LogoutLinks from './components/layout/logout.Links';
-import LoggedInLinks from './components/layout/loggedInLinks';
-//import LoggedInLinks from './components/layout/loggedInLinks'
-//import LogoutLinks from './components/layout/logoutLinks'
 function App() {
   const { token } = useContext(firebaseAuth)
   console.log(token)
