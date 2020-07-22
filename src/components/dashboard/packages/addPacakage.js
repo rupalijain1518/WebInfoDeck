@@ -18,7 +18,7 @@ class AddPackages extends Component{
   e.preventDefault();
  
   const db = firebase.firestore();
-  const userRef = db.collection('packages').add({
+  const userRef = db.collection('packages').doc(this.state.name).set({
     name: this.state.name,
     check: true
   });
@@ -34,6 +34,7 @@ class AddPackages extends Component{
       })
     }
     render(){
+      console.log(this.props.trial)
      return(
        <div> 
          <br/>

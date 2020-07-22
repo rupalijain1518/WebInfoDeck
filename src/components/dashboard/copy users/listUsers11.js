@@ -5,7 +5,7 @@ import 'firebase/firestore';
 // Initialize Firebase
 const database = firebase.firestore();
 
-const Retailers = () => {
+const ListUsers = (props) => {
   const [cinemas, setCinemas] = useState([]);
   const [selectedCinema, setSelectedCinema] = useState();
   const [movies, setMovies] = useState([]);
@@ -49,6 +49,7 @@ const Retailers = () => {
       });
   }, []);
 
+  console.log(props)
   return (
       <div>
           {error ? (
@@ -78,6 +79,8 @@ const Retailers = () => {
           </tr>
         ))}
       </tbody>
+      <hr/>
+
       {selectedCinema ? (
         <tbody>
           {movies.map(movie => (
@@ -96,4 +99,4 @@ const Retailers = () => {
     </div>);
 }
 
-export default Retailers;
+export default ListUsers;

@@ -11,20 +11,18 @@ class ListPackage extends Component {
       packages: [],
     };
   }
-   
-counter(){
 
-}
-  componentDidMount() {
+  // get data from firebase 
+
+  async componentDidMount() {
     const db = firebase.firestore();
-        db.collection("packages")
-          .get()
-          .then(querySnapshot => {
-            const data = querySnapshot.docs.map(doc => doc.data());
-            console.log(data);
-            this.setState({ packages: data });
-          });
-      }
+    db.collection("packages")
+      .get()
+      .then(querySnapshot => {
+        const data = querySnapshot.docs.map(doc => doc.data());
+        console.log(data);
+        this.setState({ packages: data });
+      });     }
     
 
   render(){
@@ -45,12 +43,11 @@ counter(){
         {packages.map(pack => (
 
         <tr key={pack.uid}>
-         <td> {pack.uid}</td>
+         <td> {pack.id}</td>
          <td> {pack.name} </td>
          <td> <button type="button"  className="btn btn-secondary">
            Assigned   {String(pack.check)}
-           </button>
-            </td>
+                          </button></td>
          
          </tr>
         ))}
