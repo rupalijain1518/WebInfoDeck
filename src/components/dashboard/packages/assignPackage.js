@@ -19,15 +19,21 @@ class AddPackages extends Component{
   e.preventDefault();
  
   const db = firebase.firestore();
-  const userRef = db.collection('users').doc(this.state.id1).collection('assignedPackages').doc(this.props.match.params.id).set({
+  const userRef = db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(this.props.match.params.id).set({
     name: this.props.match.params.id,
-    check: false
-  }); 
+    check: false,
+
+  })
+   ; 
+ 
   
+  db.collection("packages").doc(this.props.match.params.id).set({
+    check : false
+  }, {merge : true})
 }
 handleChange = (e)=>{
   this.setState({
-    [e.target.id] :e.target.value
+    id1 :e.target.value
   })
 }
 
