@@ -1,108 +1,74 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, Component } from 'react';
 import firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
-
-import * as fire from '../../../config/fire'
+import {Link} from 'react-router-dom'
+// Initialize Firebase
+const database = firebase.firestore();
 
 class ListUsers extends Component {
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection('users');
+    this.unsubscribe = null;
     this.state = {
-      users:[],
-      email:[]
+      users: []
     };
   }
-   
 
-  async componentDidMount() {
-      const db = firebase.firestore();
-      db.collection("users")
-      .get()
-      .then(querySnapshot => {
-          const data = querySnapshot.docs.map(doc => doc.id);
-          console.log(data);
-          this.setState({ users: data });
-      })
-      .catch( err =>{
-          console.log(err);
+  onCollectionUpdate = (querySnapshot) => {
+    const users = [];
+    querySnapshot.forEach((doc) => {
+      const { name , email , address , phone , location} = doc.data();
+      users.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name,
+        email,
+        address,
+        phone,
+        location
       });
+    });
+    this.setState({
+      users
+   });
+  }
 
-      db.collection("users")
-      .get()
-      .then(querySnapshot => {
-        const data = querySnapshot.docs.map((doc) => doc.data());
-        console.log("email" ,data);
-        this.setState({ email: data });
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+
+  render() {
+    return (
+      <div  >
+     <br/>
+        <h1> List Of Users</h1>
+                <br/>
         
-      });
-
-    }
-
-/* update  
-  async  componentDidMount() {
-    const db = firebase.firestore();
-    db.collection("users").doc('8qKWMUyJypDRlkuzyZNC')
-      .update(
-        {name : "hit and trial"}
-      )
-      .then(querySnapshot => {
-         });   
-
-  }
-// delete retailers
-  async  componentDidMount() {
-  
-    const db = firebase.firestore();
-    db.collection("users").doc('8qKWMUyJypDRlkuzyZNC')
-      .delete(
-      )
-      .then(querySnapshot => {
-         });   
-
-  }
-// delete retailers
-async componentDidMount() {
-  const db = firebase.firestore();
-  db.collection("users").doc("GhSSh60j80fFpae3QqmjJ1gs0Bs1")
-  .collection("retailers").doc("6af5d4d6-7c40-4213-a61e-c84a").delete()
-    .then(console.log("user retailer del")).catch( err => console.log(err));     }  
-
- */
-
-  render(){
-    const { users } = this.state;
-    const { email} = this.state
-    
-  return (
-    <div>
-    <table className="table table-striped table-sm">
+        <table className="table table-striped table-sm">
           <thead className ="table-striped">
-        <tr>
+             <tr>
+                  <th> User Id </th>
+                  <th>User Name</th>
+                  <th>User Email</th>
+                  
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.users.map(user =>
+                  <tr>
+                    <td> {user.key} </td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td> <Link to={`/showUser/${user.key}`} class="btn btn-secondary">View</Link> </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         
-          <th scope="col">User's ID</th>
-          <th scope="col">User's Name</th>
-          <th scope="col">User's Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map(pack => (
+    );
+  }}
 
-        <tr key={pack.uid}>
-         <td> {pack}</td>
-         <td> {pack.name} </td>
-         <td> {pack.email}   </td>
-         
-         </tr>
-        ))}
-      </tbody>
-    
-    </table>
-    </div>
-
-
-
-
-  );
-  }
-}
 export default ListUsers;

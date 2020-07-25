@@ -26,9 +26,6 @@ return(
       <li className="nav-item">
         <NavLink className="nav-link" exact to="/packages">packages</NavLink>
       </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" exact to="/modalButton">modal</NavLink>
-      </li>
           </ul>
           <ul className="navbar-nav nav-right">
           <li className="nav-item">

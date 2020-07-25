@@ -1,63 +1,66 @@
-import React, { Component } from 'react'
 import firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
-
-import * as fire from '../../../config/fire'
-
+import assignPackage from './assignPackage'
+import {Link} from 'react-router-dom'
+import React , {Component} from 'react'
 class ListPackage extends Component {
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection('packages');
+    this.unsubscribe = null;
     this.state = {
-      packages: [],
+      packages: []
     };
   }
 
-  // get data from firebase 
+  onCollectionUpdate = (querySnapshot) => {
+    const packages = [];
+    querySnapshot.forEach((doc) => {
+      const { name , check } = doc.data();
+      packages.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name,
+        check
+      });
+    });
+    this.setState({
+      packages
+   });
+  }
 
-  async componentDidMount() {
-    const db = firebase.firestore();
-    db.collection("packages")
-      .get()
-      .then(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => doc.data());
-        console.log(data);
-        this.setState({ packages: data });
-      });     }
-    
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
 
-  render(){
-    const { packages} = this.state;
-    
-    
-  return (
-    <div>
-    <table className="table table-striped table-sm">
+  render() {
+    return (
+      <div  >
+     <br/>
+        <h1> List Of Packages</h1>
+                <br/>
+        
+        <table className="table table-striped table-sm">
           <thead className ="table-striped">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">serial Number</th>
-          <th scope="col">Assigned</th>
-        </tr>
-      </thead>
-        <tbody>
-        {packages.map(pack => (
-
-        <tr key={pack.uid}>
-         <td> {pack.id}</td>
-         <td> {pack.name} </td>
-         <td> <button type="button"  className="btn btn-secondary">
-           Assigned   {String(pack.check)}
-                          </button></td>
-         
-         </tr>
-        ))}
-      </tbody>
-    
-    </table>
-    </div>
-
-
-  );
+             <tr>
+                  <th>Package Id</th>
+                  <th>View Package</th>
+                  <th>Assign </th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.packages.map(pack =>
+                  <tr>
+                    <td>{pack.key}</td>
+                    <td><Link to={`/showPackage/${pack.key}`} class="btn btn-secondary">View</Link></td>
+                <td> <Link to={`/assignPackage/${pack.key}`} class="btn btn-secondary">Assign{String(pack.check)}</Link> </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        
+    );
   }
 }
 export default ListPackage;

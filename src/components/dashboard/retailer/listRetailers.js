@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
-
+import {Link} from 'react-router-dom'
 // Initialize Firebase
 const database = firebase.firestore();
 
-const Retailers = () => {
-  const [cinemas, setCinemas] = useState([]);
-  const [selectedCinema, setSelectedCinema] = useState();
-  const [movies, setMovies] = useState([]);
+const ListUsers = (props) => {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUsers] = useState();
+  const [retailers, setRetailers] = useState([]);
   const [error, setError] = useState();
 
-  const selectCinema = (cinema) => {
-    setSelectedCinema(cinema);
-    database.collection('users').doc(cinema.id).collection('retailers').get()
+  const selectUser = (user) => {
+    setSelectedUsers(user);
+    database.collection('users').doc(user.id).collection('retailers').get()
       .then(response => {
-        const fetchedMovies = [];
+        const fetchedRetailers = [];
         response.forEach(document => {
-          const fetchedMovie = {
+          const fetchedRetailer = {
             id: document.id,
             ...document.data()
           };
-          fetchedMovies.push(fetchedMovie);
+          fetchedRetailers.push(fetchedRetailer);
         });
-        setMovies(fetchedMovies);
+        setRetailers(fetchedRetailers);
       })
       .catch(error => {
         setError(error);
@@ -42,13 +42,14 @@ const Retailers = () => {
           };
           fetchedCinemas.push(fetchedCinema);
         });
-        setCinemas(fetchedCinemas);
+        setUsers(fetchedCinemas);
       })
       .catch(error => {
         setError(error);
       });
   }, []);
 
+  console.log(props)
   return (
       <div>
           {error ? (
@@ -61,39 +62,59 @@ const Retailers = () => {
           <th scope="col">user's email</th>
           <th scope="col">users's phone</th>
           <th scope="col">users's address</th>
-          <th scope="col">View Retailer's</th>
+          <th scope="col" >View Retailer's</th>
         </tr>
       </thead>
         <tbody>
-      {cinemas.map(cinema => (
-          <tr key={cinema.id}>
-          <td>  <b>{cinema.name}</b></td>
-         <td>{cinema.email}  </td>
-         <td>  <b>{cinema.phone}</b></td>
-         <td>{cinema.address} </td>
+      {users.map(user => (
+          <tr key={user.id}>
+          <td>  <b>{user.name}</b></td>
+         <td>{user.email}  </td>
+         <td>  <b>{user.phone}</b></td>
+         <td>{user.address} </td>
          <td>
-         <button type="button"  onClick={() => selectCinema(cinema)} className="btn btn-secondary"> View</button> 
-         
+         <button type="button"  onClick={() => selectUser(user)} className="btn btn-secondary"> View</button>  
          </td>
           </tr>
         ))}
+     
       </tbody>
-      {selectedCinema ? (
-        <tbody>
-          {movies.map(movie => (
-            <tr key={movie.id}>
-             <td> <b>{movie.retailerId}</b></td>  
-             <td> <b>{movie.name}</b></td>  
-             <td> <b>{movie.gst}</b></td>  
-             <td> <b>{movie.location}</b></td>  
-             <td> <b>{movie.address}</b></td>  
+ 
+     <thead className ="table-striped">
+     <tr>
+       <th scope="col">Retailer's Id </th>
+       <th scope="col">Retialer's Name</th>
+       <th scope="col">Retailer's Location</th>
+       <th scope="col">Retailer's Address</th>   
+       <th scope="col">Retialer's Phone</th>
+       <th scope="col">Retialer's GST</th>
+     </tr>
+   </thead>
+  
+ 
+   {selectedUser ? (
+         
+     <tbody >
+          {retailers.map(ret => (
+            <tr  class="table-success"  key={ret.id}>
+             <td> <b>{ret.retailerId}</b></td>  
+             <td> <b>{ret.name}</b></td>  
+             <td> <b>{ret.location}</b></td>  
+             <td> <b>{ret.address}</b></td>  
+             <td> <b>{ret.phone}</b></td>  
+            
+             <td> <b>{ret.gst}</b></td>  
+            
           </tr>
           ))}
         </tbody>
       ) : null}
   
     </table>
+
+
+    
     </div>);
 }
 
-export default Retailers;
+export default ListUsers;

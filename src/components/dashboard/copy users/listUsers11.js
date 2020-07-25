@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
-
+import {Link} from 'react-router-dom'
 // Initialize Firebase
 const database = firebase.firestore();
 
 const ListUsers = (props) => {
-  const [cinemas, setCinemas] = useState([]);
-  const [selectedCinema, setSelectedCinema] = useState();
-  const [movies, setMovies] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUsers] = useState();
+  const [retailers, setRetailers] = useState([]);
   const [error, setError] = useState();
 
-  const selectCinema = (cinema) => {
-    setSelectedCinema(cinema);
-    database.collection('users').doc(cinema.id).collection('retailers').get()
+  const selectUser = (user) => {
+    setSelectedUsers(user);
+    database.collection('users').doc(user.id).collection('retailers').get()
       .then(response => {
-        const fetchedMovies = [];
+        const fetchedRetailers = [];
         response.forEach(document => {
-          const fetchedMovie = {
+          const fetchedRetailer = {
             id: document.id,
             ...document.data()
           };
-          fetchedMovies.push(fetchedMovie);
+          fetchedRetailers.push(fetchedRetailer);
         });
-        setMovies(fetchedMovies);
+        setRetailers(fetchedRetailers);
       })
       .catch(error => {
         setError(error);
@@ -42,7 +42,7 @@ const ListUsers = (props) => {
           };
           fetchedCinemas.push(fetchedCinema);
         });
-        setCinemas(fetchedCinemas);
+        setUsers(fetchedCinemas);
       })
       .catch(error => {
         setError(error);
@@ -63,33 +63,41 @@ const ListUsers = (props) => {
           <th scope="col">users's phone</th>
           <th scope="col">users's address</th>
           <th scope="col">View Retailer's</th>
+          <th scope="col">Edit user</th>
+          <th scope="col">Delete user</th>
         </tr>
       </thead>
         <tbody>
-      {cinemas.map(cinema => (
-          <tr key={cinema.id}>
-          <td>  <b>{cinema.name}</b></td>
-         <td>{cinema.email}  </td>
-         <td>  <b>{cinema.phone}</b></td>
-         <td>{cinema.address} </td>
+      {users.map(user => (
+          <tr key={user.id}>
+          <td>  <b>{user.name}</b></td>
+         <td>{user.email}  </td>
+         <td>  <b>{user.phone}</b></td>
+         <td>{user.address} </td>
          <td>
-         <button type="button"  onClick={() => selectCinema(cinema)} className="btn btn-secondary"> View</button> 
-         
+         <button type="button"  onClick={() => selectUser(user)} className="btn btn-secondary"> View</button>  
+         </td>
+         <td>
+         <Link to={`/edit/${this.user.id}`} class="btn btn-secondary">Edit</Link>
+           </td>
+         <td>
+         <Link to={`/delete/${this.user.id}`} class="btn btn-secondary">Delete</Link>
+           
          </td>
           </tr>
         ))}
       </tbody>
       <hr/>
 
-      {selectedCinema ? (
+      {selectedUser ? (
         <tbody>
-          {movies.map(movie => (
-            <tr key={movie.id}>
-             <td> <b>{movie.retailerId}</b></td>  
-             <td> <b>{movie.name}</b></td>  
-             <td> <b>{movie.gst}</b></td>  
-             <td> <b>{movie.location}</b></td>  
-             <td> <b>{movie.address}</b></td>  
+          {retailers.map(ret => (
+            <tr key={ret.id}>
+             <td> <b>{ret.retailerId}</b></td>  
+             <td> <b>{ret.name}</b></td>  
+             <td> <b>{ret.gst}</b></td>  
+             <td> <b>{ret.location}</b></td>  
+             <td> <b>{ret.address}</b></td>  
           </tr>
           ))}
         </tbody>

@@ -1,34 +1,52 @@
-import React ,{Component}from 'react'
-
+import React , {Component}from 'react';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-class AssignPackage extends Component{
-
+class AddPackages extends Component{
+  
   constructor() {
     super();
     this.state = {};
   }
   
   state={
-    user:"",
-    name:''
-    }
+    id1:"",
+    key: ''  
+  }
     
   handleSubmit= (e)=>{
+    
+  console.log("Add PACK state", this.state.id1 ) 
   e.preventDefault();
  
   const db = firebase.firestore();
+  const userRef = db.collection('users').doc(this.state.id1).collection('assignedPackages').doc(this.props.match.params.id).set({
+    name: this.props.match.params.id,
+    check: false
+  }); 
   
-  console.log("Assign PACK state", this.state)  
-  
-  console.log("Assign PACK props", this.props)  
- 
 }
-    handleChange = (e)=>{
-      this.setState({
-        [e.target.id] :e.target.value
-      })
+handleChange = (e)=>{
+  this.setState({
+    [e.target.id] :e.target.value
+  })
+}
+
+    componentDidMount() {
+      const ref = firebase.firestore().collection('packages').doc(this.props.match.params.id);
+      ref.get().then((doc) => {
+        if (doc.exists) {
+          this.setState({
+            user: doc.data(),
+            key: doc.id
+          });
+        } else {
+          console.log("No such document!");
+        }
+      });
     }
+  
+
+
     render(){
      return(
        <div> 
@@ -37,18 +55,14 @@ class AssignPackage extends Component{
          <br/>
       <form onSubmit={this.handleSubmit}>
       <div className="form-group">
-        <label htmlFor="exampleInputPassword1">Enter kit's serial number</label>
-        <input required type="text"  value={this.state.name} onChange={this.handleChange} className="form-control" id="name" placeholder="Kit serial Number"/>
-      </div>
-      <div className="form-group">
-        <label htmlFor="exampleInputPassword1">Enter user's Id</label>
-        <input required type="text"  value={this.state.user} onChange={this.handleChange} className="form-control" id="name" placeholder="Kit serial Number"/>
+        <label htmlFor="exampleInputPassword1">Enter User's ID</label>
+        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="name" placeholder="Kit serial Number"/>
       </div>
       <button type="submit" className="btn btn-primary">Submit</button>
     </form>
   </div>
     );
   }
-}
-
-export default AssignPackage
+  }
+  
+  export default AddPackages;

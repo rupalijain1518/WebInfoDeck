@@ -9,7 +9,6 @@ class AddPackages extends Component{
   }
   
   state={
-    id:"",
     name:'',
     check:true
     }
@@ -34,7 +33,6 @@ class AddPackages extends Component{
       })
     }
     render(){
-      console.log(this.props.trial)
      return(
        <div> 
          <br/>

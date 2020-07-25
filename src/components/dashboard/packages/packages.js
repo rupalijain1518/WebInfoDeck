@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import AddPackages from './addPacakage'
-import ListPackage from './listPackage1'
+import ListPackage from './ListPackage'
 
 class Packages extends Component {
   render() {
