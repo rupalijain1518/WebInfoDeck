@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
-import {Link} from 'react-router-dom'
-// Initialize Firebase
 const database = firebase.firestore();
 
 const ListUsers = (props) => {
@@ -62,9 +60,7 @@ const ListUsers = (props) => {
           <th scope="col">user's email</th>
           <th scope="col">users's phone</th>
           <th scope="col">users's address</th>
-          <th scope="col">View Retailer's</th>
-          <th scope="col">Edit user</th>
-          <th scope="col">Delete user</th>
+          <th scope="col" >View Retailer's</th>
         </tr>
       </thead>
         <tbody>
@@ -77,33 +73,45 @@ const ListUsers = (props) => {
          <td>
          <button type="button"  onClick={() => selectUser(user)} className="btn btn-secondary"> View</button>  
          </td>
-         <td>
-         <Link to={`/edit/${this.user.id}`} class="btn btn-secondary">Edit</Link>
-           </td>
-         <td>
-         <Link to={`/delete/${this.user.id}`} class="btn btn-secondary">Delete</Link>
-           
-         </td>
           </tr>
         ))}
+     
       </tbody>
-      <hr/>
-
-      {selectedUser ? (
-        <tbody>
+ 
+     <thead className ="table-striped">
+     <tr>
+       <th scope="col">Retailer's Id </th>
+       <th scope="col">Retialer's Name</th>
+       <th scope="col">Retailer's Location</th>
+       <th scope="col">Retailer's Address</th>   
+       <th scope="col">Retialer's Phone</th>
+       <th scope="col">Retialer's GST</th>
+     </tr>
+   </thead>
+  
+ 
+   {selectedUser ? (
+         
+     <tbody >
           {retailers.map(ret => (
-            <tr key={ret.id}>
+            <tr  class="table-success"  key={ret.id}>
              <td> <b>{ret.retailerId}</b></td>  
              <td> <b>{ret.name}</b></td>  
-             <td> <b>{ret.gst}</b></td>  
              <td> <b>{ret.location}</b></td>  
              <td> <b>{ret.address}</b></td>  
+             <td> <b>{ret.phone}</b></td>  
+            
+             <td> <b>{ret.gst}</b></td>  
+            
           </tr>
           ))}
         </tbody>
       ) : null}
   
     </table>
+
+
+    
     </div>);
 }
 

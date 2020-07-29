@@ -1,7 +1,6 @@
 import React  from 'react';
-import {Link , NavLink} from 'react-router-dom';
 import LoggedInLinks from './loggedInLinks'
-import LogoutLinks from './logout.Links'
+import LogoutLinks from './logoutLinks'
 const Header = () =>{
 return(    
 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

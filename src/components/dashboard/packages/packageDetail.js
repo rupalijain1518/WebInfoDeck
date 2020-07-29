@@ -26,8 +26,8 @@ class PackageDetail extends Component{
   }
 
   delete(id){
-    firebase.firestore().collection('users').doc(id).delete().then(() => {
-     this.props.history.push("/users")}).catch((error) => {
+    firebase.firestore().collection('packages').doc(id).delete().then(() => {
+     this.props.history.push("/packages")}).catch((error) => {
       console.error("Error removing document: ", error);
     });
   }

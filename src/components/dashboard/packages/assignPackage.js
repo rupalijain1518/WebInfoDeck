@@ -22,8 +22,7 @@ class AddPackages extends Component{
   const userRef = db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(this.props.match.params.id).set({
     name: this.props.match.params.id,
     check: false,
-
-  })
+  }, {merge : true})
    ; 
  
   
@@ -62,7 +61,7 @@ handleChange = (e)=>{
       <form onSubmit={this.handleSubmit}>
       <div className="form-group">
         <label htmlFor="exampleInputPassword1">Enter User's ID</label>
-        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="name" placeholder="Kit serial Number"/>
+        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="name" placeholder="User's id number"/>
       </div>
       <button type="submit" className="btn btn-primary">Submit</button>
     </form>

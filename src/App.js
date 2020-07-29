@@ -14,6 +14,7 @@ import listUsers from './components/dashboard/users/listUsers'
 import {firebaseAuth} from './provider/AuthProvider'
 import UserDetail from './components/dashboard/users/userDetail'
 import PackageDetail from './components/dashboard/packages/packageDetail';
+import RetailerDetail from './components/dashboard/retailer/retailerDetails'
 function App() {
   const { token } = useContext(firebaseAuth)
   console.log(token)
@@ -28,6 +29,9 @@ function App() {
       <Route exact path = "/login" render={rProps => token === null ? <Login /> : <Packages />}/>
       <Route exact path="/users" component={listUsers}/>
       <Route exact path = "/retailers" component = {Retailers} /> 
+      <Route exact path='/showRetailer/:id' component={RetailerDetail} />
+      
+      
       <Route exact path='/editUser/:id' component={UserDetail} />
       <Route exact path='/showUser/:id' component={UserDetail} />
       
@@ -35,7 +39,7 @@ function App() {
       <Route exact path = "/assignPackage/:id" component = {AssignPackage}/>
       <Route exact path = "/addPackages" component = {addPackages} />
       <Route exact path = "/packages" component = {Packages} />
-      
+      <Route exact path = "/logout" component ={Login}/>
      
       <Route exact path="/retailer/:id" component = {rd}/>
      

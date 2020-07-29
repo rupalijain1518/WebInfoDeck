@@ -53,7 +53,10 @@ class ListPackage extends Component {
                   <tr>
                     <td>{pack.key}</td>
                     <td><Link to={`/showPackage/${pack.key}`} class="btn btn-secondary">View</Link></td>
-                <td> <Link to={`/assignPackage/${pack.key}`} class="btn btn-secondary">Assign{String(pack.check)}</Link> </td>
+                <td>   {pack.check == true ? <Link to={`/assignPackage/${pack.key}`}   
+                 class="btn btn-secondary">Assign</Link> : 
+                 <label for="exampleInputEmail1">Assigned</label>
+                } </td>
                   </tr>
                 )}
               </tbody>
