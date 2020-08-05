@@ -1,4 +1,3 @@
-import * as fire from '../config/fire'
 import firebase from 'firebase'
 import 'firebase/auth'
 
@@ -6,7 +5,7 @@ export const authMethods = {
   signin: (email, password, setErrors, setToken) => {
     //change from create users to...
 
-    if( email == 'admin@gmail.com'  && password == 'admin1'){   
+    if( email === 'admin@gmail.com'  && password === 'admin1'){   
     firebase.auth().signInWithEmailAndPassword(email, password) 
       //everything is almost exactly the same as the function above
       .then( async res => {

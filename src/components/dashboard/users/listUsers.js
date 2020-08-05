@@ -1,9 +1,7 @@
-import React, { useState, useEffect, Component } from 'react';
-import firebase, { firestore } from 'firebase/app';
+import React, { Component } from 'react';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {Link} from 'react-router-dom'
-// Initialize Firebase
-const database = firebase.firestore();
 
 class ListUsers extends Component {
   constructor(props) {

@@ -15,20 +15,20 @@ class AddPackages extends Component{
     
   handleSubmit= (e)=>{
     
-  console.log("Add PACK state", this.state.id1 ) 
   e.preventDefault();
  
   const db = firebase.firestore();
-  const userRef = db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(this.props.match.params.id).set({
+  db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(this.props.match.params.id).set({
     name: this.props.match.params.id,
     check: false,
-  }, {merge : true})
-   ; 
+  }, {merge : true}); 
  
   
   db.collection("packages").doc(this.props.match.params.id).set({
     check : false
   }, {merge : true})
+  this.props.history.push("/packages")
+   
 }
 handleChange = (e)=>{
   this.setState({

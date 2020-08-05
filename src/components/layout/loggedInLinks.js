@@ -1,5 +1,5 @@
 import React, { Component }  from 'react';
-import {Link , NavLink} from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 import firebase from '../../config/fire'
 class LoggedInLinks extends Component{
 constructor (props){
@@ -11,6 +11,8 @@ constructor (props){
 
 logOutUser(){
   firebase.auth().signOut();
+ // this.props.history.push("/")
+    
 console.log("sihnouttt")
 }
 

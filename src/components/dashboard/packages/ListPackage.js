@@ -1,6 +1,5 @@
-import firebase, { firestore } from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
-import assignPackage from './assignPackage'
 import {Link} from 'react-router-dom'
 import React , {Component} from 'react'
 class ListPackage extends Component {
@@ -53,9 +52,9 @@ class ListPackage extends Component {
                   <tr>
                     <td>{pack.key}</td>
                     <td><Link to={`/showPackage/${pack.key}`} class="btn btn-secondary">View</Link></td>
-                <td>   {pack.check == true ? <Link to={`/assignPackage/${pack.key}`}   
+                <td>   {pack.check === true ? <Link to={`/assignPackage/${pack.key}`}   
                  class="btn btn-secondary">Assign</Link> : 
-                 <label for="exampleInputEmail1">Assigned</label>
+                 <label htmlFor="exampleInputEmail1">Assigned</label>
                 } </td>
                   </tr>
                 )}

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Component } from 'react';
-import firebase, { firestore } from 'firebase/app';
+import React, { Component } from 'react';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {Link} from 'react-router-dom'
 class UserDetail extends Component{
@@ -44,9 +44,12 @@ console.log(this.state.user)
     <br/>
     <div className="card" styles="width: 18rem;">
     <div className="card-body">
+    <img src={this.state.user.profileUrl} alt="..." class="rounded float-right" height="300px" width="300px"/>
+      
 <h5 className="card-title">{this.state.user.name} </h5>
       <h6 className="card-subtitle mb-2 text-muted">{this.state.user.email}</h6>
       <p className="card-text">
+           
      {this.state.user.phone}<br/>
                    {this.state.user.address}<br/>
                    {this.state.user.location}<br/>
@@ -56,6 +59,11 @@ console.log(this.state.user)
          
             </div>
             </div>
+
+            <div class="text-center">
+            <br/>
+            
+      </div>
   </div>
  );
 }

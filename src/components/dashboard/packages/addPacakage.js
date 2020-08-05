@@ -16,7 +16,6 @@ class AddPackages extends Component{
     to : '',
     prefix: '',
     id1 : ''
-//    userId:''
 }
     
   handleSubmit= (e)=>{
@@ -25,45 +24,56 @@ class AddPackages extends Component{
     let packages = [];
     for (var i = this.state.from; i <= this.state.to; i++) {
         packages.push(this.state.prefix + i);
-      
     
         this.setState({
           names : packages
-        },() => {
-          console.log("callback: ", this.state);
-        })
+        },() => {})
     
       }
   
 const db = firebase.firestore()
 this.state.names.map((name)=>{
 
-const res= db.collection('packages').doc(name).set({
+db.collection('packages').doc(name).set({
     name: name,
-    check: false
+    check: true,
+    userId:this.state.id1
   }).then(( res)=>{
-console.log("Succefully inserted packages" + res)
+console.log("Succefully inserted packages" ,res)
   }).catch((err) => {
-    console.log("error occured" + err)
+    console.log("error occured" ,err)
   });
-  const userRef = db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
-    name: name
+ if(this.state.id1){
+
+  db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
+    name: name,
+    check : false
   }, {merge : true}).then(( res)=>{
     console.log("Succefully assigned Packages" + res)
       }).catch((err) => {
         console.log("error occured" + err)
       });
-})
+    
+    db.collection('packages').doc(name).set({
 
+      check : false
+    },{merge : true})
+ 
+ }
+    
+    })
 
+/*    this.setState({
+      names : [],prefix:'',from:'',to:'',id1:''
+    },() => {})
+*/
 }
+
 handleChange = (e)=>{
       this.setState({
         [e.target.id] :e.target.value
-        
-      })
-      console.log(e.target.id)
-    }
+        },()=>{})
+      }
     render(){
       return(
        <div> 
@@ -89,7 +99,7 @@ handleChange = (e)=>{
 
       <div className="form-group">
         <label htmlFor="exampleInputPassword1">User's ID</label>
-        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="id1" placeholder="User's Id "/>
+        <input  type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="id1" placeholder="User's Id "/>
       </div>
 
 
