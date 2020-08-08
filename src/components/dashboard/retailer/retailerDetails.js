@@ -1,7 +1,6 @@
 import React, {  Component } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {Link} from 'react-router-dom'
 class RetailerDetail extends Component{
   constructor(props) {
     super(props);
@@ -16,20 +15,23 @@ class RetailerDetail extends Component{
     };
   }
 
-/*  onCollectionUpdate = (querySnapshot) => {
+  onCollectionUpdate = (querySnapshot) => {
+    console.log("into given packages")
     const packages = [];
     querySnapshot.forEach((doc) => {
     
       packages.push({
         keyPack: doc.id,
         doc// DocumentSnapshot
-        });
-    });
+        } 
+        );
+      });
     this.setState({
-      packages
+      packages : packages
    });
-  }
-*/
+   console.log("packages array" , packages)
+   }
+
   componentDidMount() {
    
     const ref = firebase.firestore().collection('retailersList').doc(this.props.match.params.id);
@@ -55,13 +57,19 @@ class RetailerDetail extends Component{
       ,gst1 :gst1       
       }, ()=>{});        
       
+
+      const ref1 = firebase.firestore().collection('users').doc(this.state.key1)
+      .collection('retailers').doc(this.props.match.params.id)
+      .collection('givenpackages')
+      console.log(this.state.key,this.state.key1)
+      if(ref1.onSnapshot){
+      ref1.onSnapshot(this.onCollectionUpdate)
+    }else {
+      console.log("somthing went wrong")
+    }
+
       });
- /*   
-const ref1 = firebase.firestore().collection('users').doc(this.state.key1)
-.collection('retailers').doc(this.props.match.params.id)
-.collection('givenPackages')
-ref1.onSnapshot(this.onCollectionUpdate)
-*/
+         
   }
 
   delete(id){
@@ -76,29 +84,37 @@ ref1.onSnapshot(this.onCollectionUpdate)
 
 render(){
 return (
-  
+
   <div className="row">
   <div className="col s12 m6">
   <br/>
 
-  <div className="card" styles="width: 18rem;">
-    <div className="card-body">
-<h6 className="card-subtitle mb-2 text-muted">{this.state.user.name}</h6>
-<img src={this.state.user.profileUrl} alt="..." class="rounded float-right" height="200px" width="200px"/>
-    <p className="card-text">
-        {this.state.key1}
-      {this.state.user.email}<br/>
-      {this.state.user.phone}<br/>
-     {this.state.user.address}<br/>
-     {this.state.user.location}<br/>
-     </p>
 
-      <Link to={`/editUser/${this.state.key}`} class="btn btn-success">yet to be implemented</Link> &nbsp;&nbsp;
+
+  <div class="card text-center" styles="width: 18rem;">
+      <br/>
+<center>  {this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="..." class="rounded" height="170px" width="170px"/> : "No picture"}
+     </center>
+  <div class="card-body">
+  <h5 class="card-title">{this.state.user.name} </h5>
+  <p class="card-text"><small class="text-muted">{this.state.user.email}</small></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">User Id :{this.state.key1}</li>
+    
+    <li class="list-group-item">{this.state.user.phone}</li>
+    <li class="list-group-item">{this.state.user.address}</li>
+    <li class="list-group-item">{this.state.user.location ? this.state.user.location : "Not Available"}</li>
+  </ul>
+  <div class="card-body">
+  <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
      <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+  </div>
+  
          
-            </div>
-            </div> 
-       
+</div>
+
+
            
        </div>
   <div className="col s12 m5 offset-m1">
@@ -128,9 +144,30 @@ return (
             </table>
 
 :null}
-  </div>
+<div>
+  <br/>
+{ this.state.packages 
 
-{this.state.packages}
+? <table className="table">
+          <thead className ="table-striped">
+             <tr>
+                  <th>Package Name</th>
+                
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.packages.map(key =>
+                  <tr>
+                    <td>{key.keyPack}</td>
+                 
+                  </tr>
+                )}
+              </tbody>
+            </table>
+
+:null}
+</div>
+  </div>
 
 </div>
 

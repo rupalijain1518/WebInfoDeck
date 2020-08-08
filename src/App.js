@@ -15,6 +15,7 @@ import {firebaseAuth} from './provider/AuthProvider'
 import UserDetail from './components/dashboard/users/userDetail'
 import PackageDetail from './components/dashboard/packages/packageDetail';
 import RetailerDetail from './components/dashboard/retailer/retailerDetails'
+import logout from './components/misc/logout'
 function App() {
   const { token } = useContext(firebaseAuth)
   console.log(token)
@@ -39,7 +40,7 @@ function App() {
       <Route exact path = "/assignPackage/:id" component = {AssignPackage}/>
       <Route exact path = "/addPackages" component = {addPackages} />
       <Route exact path = "/packages" component = {Packages} />
-      <Route exact path = "/logout" component ={Login}/>
+      <Route exact path = "/logout" component ={logout}/>
      
       <Route exact path="/retailer/:id" component = {rd}/>
      

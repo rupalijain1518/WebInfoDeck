@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {Link} from 'react-router-dom'
 class UserDetail extends Component{
   constructor(props) {
     super(props);
@@ -40,32 +39,31 @@ render(){
 console.log(this.state.user)
   return (
     
-    <div className = "container">
-    <br/>
-    <div className="card" styles="width: 18rem;">
-    <div className="card-body">
-    <img src={this.state.user.profileUrl} alt="..." class="rounded float-right" height="300px" width="300px"/>
-      
-<h5 className="card-title">{this.state.user.name} </h5>
-      <h6 className="card-subtitle mb-2 text-muted">{this.state.user.email}</h6>
-      <p className="card-text">
-           
-     {this.state.user.phone}<br/>
-                   {this.state.user.address}<br/>
-                   {this.state.user.location}<br/>
-               </p>
-      <Link to={`/editUser/${this.state.key}`} class="btn btn-success">yet to be implemented</Link> &nbsp;&nbsp;
-     <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
-         
-            </div>
-            </div>
-
-            <div class="text-center">
-            <br/>
-            
-      </div>
+    <div class="card text-center" styles="width: 18rem;">
+      <br/>
+<center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="..." class="rounded" height="170px" width="170px"/> : "No picture"}
+</center>
+  <div class="card-body">
+  <h5 class="card-title">{this.state.user.name} </h5>
+  <p class="card-text"><small class="text-muted">{this.state.user.email}</small></p>
   </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{this.state.user.phone ? this.state.user.phone : "Not Available"}</li>
+    <li class="list-group-item">{this.state.user.address ? this.state.user.address : "Not Available"}</li>
+    <li class="list-group-item">{this.state.user.location ? this.state.user.location : "Not Available"}</li>
+  </ul>
+  <div class="card-body">
+  <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
+     <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+  </div>
+  
+         
+</div>
  );
 }
 }
+
+
+
+
 export default UserDetail;
