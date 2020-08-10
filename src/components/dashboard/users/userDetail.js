@@ -6,9 +6,29 @@ class UserDetail extends Component{
     super(props);
     this.state = {
       user: {},
-      key: ''
+      key: '',
+      packages: [],
+       keyPack:''
     };
   }
+
+  onCollectionUpdate = (querySnapshot) => {
+    console.log("into assigned packages")
+    const packages = [];
+    querySnapshot.forEach((doc) => {
+    
+      packages.push({
+        keyPack: doc.id,
+        doc// DocumentSnapshot
+        } 
+        );
+      });
+    this.setState({
+      packages : packages
+   });
+   console.log("packages array" , packages)
+   }
+
 
   componentDidMount() {
     const ref = firebase.firestore().collection('users').doc(this.props.match.params.id);
@@ -17,10 +37,11 @@ class UserDetail extends Component{
         this.setState({
           user: doc.data(),
           key: doc.id,
-
         });
-      } else {
-        console.log("No such document!");
+
+        const ref1 = firebase.firestore().collection('users').doc(this.props.match.params.id)
+        .collection('assignedpackages')
+        ref1.onSnapshot(this.onCollectionUpdate)
       }
     });
   }
@@ -36,10 +57,14 @@ class UserDetail extends Component{
   }
 
 render(){
-console.log(this.state.user)
-  return (
-    
-    <div class="card text-center" styles="width: 18rem;">
+return (
+
+
+  <div className="package container">
+        <div className="row">
+          <div className="col s12 m6">
+            
+          <div class="card text-center" styles="width: 18rem;">
       <br/>
 <center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="..." class="rounded" height="170px" width="170px"/> : "No picture"}
 </center>
@@ -48,16 +73,41 @@ console.log(this.state.user)
   <p class="card-text"><small class="text-muted">{this.state.user.email}</small></p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">{this.state.user.phone ? this.state.user.phone : "Not Available"}</li>
-    <li class="list-group-item">{this.state.user.address ? this.state.user.address : "Not Available"}</li>
-    <li class="list-group-item">{this.state.user.location ? this.state.user.location : "Not Available"}</li>
+  {this.state.user.phone? <li class="list-group-item"> {this.state.user.phone} </li>: null}
+  {this.state.user.address? <li class="list-group-item"> {this.state.user.address} </li>: null}
+  {this.state.user.location? <li class="list-group-item"> {this.state.user.location} </li>: null}
   </ul>
   <div class="card-body">
   <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
      <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
   </div>
-  
+          </div>
          
+        </div>
+          <div className="col s12 m5 offset-m1">
+          <br/>
+{ this.state.packages 
+
+? <table className="table">
+          <thead className ="table-striped">
+             <tr>
+                  <th>Package Name</th>
+                 
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.packages.map(key =>
+                  <tr>
+                    <td>{key.keyPack}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+
+:null}
+   </div>
+      </div>
+    
 </div>
  );
 }

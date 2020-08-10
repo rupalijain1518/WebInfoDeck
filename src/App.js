@@ -7,9 +7,7 @@ import Packages from './components/dashboard/packages/packages'
 import addPackages from './components/dashboard/packages/addPacakage'
  import { BrowserRouter as Router , Route , Switch} from 'react-router-dom';
 import Login from './components/auth/login';
-import AssignPackage from './components/dashboard/packages/assignPackage'
 import NotFound from './components/misc/notFound';
-import rd from './components/dashboard/retailer/retailerDetails'
 import listUsers from './components/dashboard/users/listUsers'
 import {firebaseAuth} from './provider/AuthProvider'
 import UserDetail from './components/dashboard/users/userDetail'
@@ -33,17 +31,14 @@ function App() {
       <Route exact path='/showRetailer/:id' component={RetailerDetail} />
       
       
-      <Route exact path='/editUser/:id' component={UserDetail} />
       <Route exact path='/showUser/:id' component={UserDetail} />
       
       <Route exact path = "/showPackage/:id" component = {PackageDetail}/>
-      <Route exact path = "/assignPackage/:id" component = {AssignPackage}/>
       <Route exact path = "/addPackages" component = {addPackages} />
       <Route exact path = "/packages" component = {Packages} />
       <Route exact path = "/logout" component ={logout}/>
      
-      <Route exact path="/retailer/:id" component = {rd}/>
-     
+      
       <Route  component = {NotFound} /> 
        </Switch>
      

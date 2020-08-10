@@ -15,7 +15,8 @@ class AddPackages extends Component{
     from : '',
     to : '',
     prefix: '',
-    id1 : ''
+    id1 : '',
+    email:''
 }
     
   handleSubmit= (e)=>{
@@ -32,41 +33,40 @@ class AddPackages extends Component{
       }
   
 const db = firebase.firestore()
+
+db.collection('users').doc(this.state.id1).get().then((res) =>{
+  console.log(res.data().email)
+this.setState({
+  email : res.data().email
+})
+})
+
+
 this.state.names.map((name)=>{
+
+
 
 db.collection('packages').doc(name).set({
     name: name,
-    check: true,
-    userId:this.state.id1
+    check: false,
+    userId:this.state.id1,
+    email :this.state.email
   }).then(( res)=>{
 console.log("Succefully inserted packages" ,res)
   }).catch((err) => {
     console.log("error occured" ,err)
   });
- if(this.state.id1){
 
   db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
-    name: name,
-    check : false
+    name: name
   }, {merge : true}).then(( res)=>{
-    console.log("Succefully assigned Packages" + res)
+    console.log("Succefully assigned Packages" , res)
       }).catch((err) => {
-        console.log("error occured" + err)
+        console.log("error occured" , err)
       });
-    
-    db.collection('packages').doc(name).set({
-
-      check : false
-    },{merge : true})
- 
- }
-    
     })
 
-/*    this.setState({
-      names : [],prefix:'',from:'',to:'',id1:''
-    },() => {})
-*/
+    
 }
 
 handleChange = (e)=>{
@@ -99,7 +99,7 @@ handleChange = (e)=>{
 
       <div className="form-group">
         <label htmlFor="exampleInputPassword1">User's ID</label>
-        <input  type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="id1" placeholder="User's Id "/>
+        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="id1" placeholder="User's Id "/>
       </div>
 
 

@@ -26,9 +26,12 @@ class PackageDetail extends Component{
 
   delete(id){
     firebase.firestore().collection('packages').doc(id).delete().then(() => {
-     this.props.history.push("/packages")}).catch((error) => {
+     this.props.history.push("/packages")
+    }).catch((error) => {
       console.error("Error removing document: ", error);
     });
+
+
   }
 
 render(){
@@ -41,6 +44,8 @@ render(){
     <div className="card-body">
 <h5 className="card-title">{this.state.user.name} </h5>
       <h6 className="card-subtitle mb-2 text-muted">{this.state.user.userId}</h6>
+      <h6 className="card-subtitle mb-2 text-muted"><small>{this.state.user.email}</small></h6>
+  
   <p className="card-text">CHECK : {String(this.state.user.check)}</p>
   <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
           <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
