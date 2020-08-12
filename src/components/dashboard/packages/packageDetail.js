@@ -43,9 +43,9 @@ render(){
     <div className="card" styles="width: 18rem;">
     <div className="card-body">
 <h5 className="card-title">{this.state.user.name} </h5>
-      <h6 className="card-subtitle mb-2 text-muted">{this.state.user.userId}</h6>
-      <h6 className="card-subtitle mb-2 text-muted"><small>{this.state.user.email}</small></h6>
-  
+      {this.state.user.userId ? <h6 className="card-subtitle mb-2 text-muted">{this.state.user.userId} </h6> : null}
+      {this.state.user.email ? <h6 className="card-subtitle mb-2 text-muted">{this.state.user.email} </h6> : null}
+      
   <p className="card-text">CHECK : {String(this.state.user.check)}</p>
   <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
           <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
