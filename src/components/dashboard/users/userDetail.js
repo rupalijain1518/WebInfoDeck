@@ -66,7 +66,7 @@ return (
             
           <div class="card text-center" styles="width: 18rem;">
       <br/>
-<center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="..." class="rounded" height="170px" width="170px"/> : "No picture"}
+<center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="" class="rounded" height="170px" width="170px"/> : "No picture"}
 </center>
   <div class="card-body">
   <h5 class="card-title">{this.state.user.name} </h5>

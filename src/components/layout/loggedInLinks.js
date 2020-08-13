@@ -11,9 +11,6 @@ constructor (props){
 
 logOutUser(){
   firebase.auth().signOut();
- // this.props.history.push("/")
-    
-console.log("sihnouttt")
 }
 
 render(){

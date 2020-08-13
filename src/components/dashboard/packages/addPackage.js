@@ -25,10 +25,9 @@ class AddPackages extends Component{
     let packages = [];
     for (var i = this.state.from; i <= this.state.to; i++) {
         packages.push(this.state.prefix + i);
-    
         this.setState({
           names : packages
-        },() => {})
+        },() => { console.log("")})
     
       }
   
@@ -43,8 +42,6 @@ this.setState({
 
 
 this.state.names.map((name)=>{
-
-
 
 db.collection('packages').doc(name).set({
     name: name,

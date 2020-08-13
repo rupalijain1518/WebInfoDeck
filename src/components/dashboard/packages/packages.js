@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AddPackages from './addPacakage'
+import AddPackages from './addPackage'
 import ListPackage from './ListPackage'
 
 class Packages extends Component {
