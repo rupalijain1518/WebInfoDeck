@@ -10,7 +10,10 @@ constructor (props){
 }
 
 logOutUser(){
-  firebase.auth().signOut();
+
+  setTimeout(firebase.auth().signOut(), 3000);
+
+  
 }
 
 render(){
@@ -27,6 +30,9 @@ render(){
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" exact to="/packages">packages</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" exact to="/search">search</NavLink>
           </li>
               </ul>
               <ul className="navbar-nav nav-right">

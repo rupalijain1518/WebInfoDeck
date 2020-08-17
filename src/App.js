@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
+import '../node_modules/bootstrap/dist/js/bootstrap.js'
+import Popper from 'popper.js'
 import Header from './components/layout/header';
 import Retailers from './components/dashboard/retailer/listRetailers';
 import Packages from './components/dashboard/packages/packages'
 import addPackage from './components/dashboard/packages/addPackage'
 import { BrowserRouter as Router , Route , Switch , Redirect} from 'react-router-dom';
+import AssignPackage from './components/dashboard/packages/assignPackage'
 import Login from './components/auth/login';
 import NotFound from './components/misc/notFound';
 import listUsers from './components/dashboard/users/listUsers'
@@ -14,14 +17,14 @@ import PackageDetail from './components/dashboard/packages/packageDetail';
 import RetailerDetail from './components/dashboard/retailer/retailerDetails'
 import logout from './components/misc/logout'
 import firebase from './config/fire'
-
+import search from './components/dashboard/search'
 function AuthenticatedRoute({component: Component, authenticated, ...rest}) {
   return (
     <Route
       {...rest}
       render={(props) => authenticated === true
           ? <Component {...props} {...rest} />
-          : <Redirect to="/login" /> } />
+          : <Redirect to="/" /> } />
   )
 }
 
@@ -91,17 +94,27 @@ class App extends Component {
      
       <AuthenticatedRoute authenticated={this.state.authenticated} exact path='/showRetailer/:id' component={RetailerDetail} />
       
+      <AuthenticatedRoute 
+      authenticated={this.state.authenticated} 
+      exact path='/assignPackage/:id' 
+      component={AssignPackage} />
       
       <AuthenticatedRoute authenticated={this.state.authenticated} exact path='/showUser/:id' component={UserDetail} />
       
-      <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/showPackage/:id" component = {PackageDetail}/>
+      <AuthenticatedRoute authenticated={this.state.authenticated}
+       exact path = "/showPackage/:id" 
+       component = {PackageDetail}/>
+<AuthenticatedRoute
+ authenticated={this.state.authenticated} 
+  exact path='/search' 
+  component={search}/>
+     
       <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/addPackages" component = {addPackage} />
       <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/logout" component ={logout}/>
      
       
-      <AuthenticatedRoute  component = {NotFound} /> 
-
-     </Switch>
+      <Route  component = {NotFound} /> 
+</Switch>
     
   </Router>
   </div>

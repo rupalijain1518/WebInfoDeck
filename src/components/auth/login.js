@@ -11,7 +11,8 @@ class Login extends Component{
     this.state = {
       redirect: false,
       email :'',
-      password:''
+      password:'' , 
+      error :''
     }
   }
    
@@ -24,8 +25,9 @@ firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.passwor
     ()=>{ console.log("redurect state changed")})
   })
   .catch((err)=>{
-    console.log("Error into login ",err)
-  })
+    this.setState({error : err},
+      ()=>{ console.log("error occured")})
+     })
 
 }
   handleChange = (e)=>{
@@ -49,6 +51,9 @@ firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.passwor
        <br/>
        <h1>Welcome to InfoDeck</h1>
        <br/>
+       {this.state.error && <p className="text-danger">{this.state.error.message}</p>}
+				
+
     <form onSubmit={this.handleSubmit}>
     <div className="form-group">
       <label htmlFor="exampleInputEmail1">Email address</label>
