@@ -18,16 +18,28 @@ class Login extends Component{
    
   handleSubmit= (e)=>{
   e.preventDefault();
-firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.password)
-.then((u) =>{
-   this.props.setCurrentUser(u)
-    this.setState({redirect : true},
-    ()=>{ console.log("redurect state changed")})
-  })
-  .catch((err)=>{
-    this.setState({error : err},
-      ()=>{ console.log("error occured")})
-     })
+  if(this.state.email === 'admin@gmail.com' && this.state.password === 'admin1'){
+    firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.password)
+    .then((u) =>{
+       this.props.setCurrentUser(u)
+       console.log(this.props.setCurrentUser(u)
+       )
+        this.setState({redirect : true},
+        ()=>{ console.log("redirect state changed")})
+      })
+      .catch((err)=>{
+        this.setState({error : err},
+          ()=>{ console.log("error occured")})
+         })
+    
+  }else {
+    firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.password)
+    .then()
+      .catch((err)=>{
+        this.setState({error : err},
+          ()=>{ console.log("error occured")})
+         })   
+  }
 
 }
   handleChange = (e)=>{
@@ -37,14 +49,10 @@ firebase.auth().signInWithEmailAndPassword(this.state.email , this.state.passwor
   }
   render(){
 
-//    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { from } = this.props.location.state || { from: { pathname: '/packages' } }
 
-  //  if (this.state.redirect === true) {
-    //  return <Redirect to={from} />
-    //}
-
-    if(this.state.redirect === true ) {
-      return <Redirect to = "/packages"/>
+    if (this.state.redirect === true) {
+      return <Redirect to={from} />
     }
    return(
      <div> 

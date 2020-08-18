@@ -3,7 +3,7 @@ const NotFound = () =>{
     return( 
 <div className="not-found">
 
-<div class="alert alert-success" role="alert">
+<div className="alert alert-success" role="alert">
 Successfully Logged Out!!
 </div>
 </div>

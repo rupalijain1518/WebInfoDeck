@@ -5,7 +5,7 @@ class LoggedInLinks extends Component{
 constructor (props){
   super(props);
   this.state= {
-
+authenticated :false
   }
 }
 
@@ -37,7 +37,7 @@ render(){
               </ul>
               <ul className="navbar-nav nav-right">
               <li className="nav-item">        <NavLink className="nav-link" exact to="/logout">
-                <button onClick = {this.logOutUser} type="button"class="btn btn-dark">logout</button></NavLink>
+                <button onClick = {this.logOutUser} type="button"className="btn btn-dark">logout</button></NavLink>
       
               </li>
               </ul>

@@ -22,55 +22,49 @@ this.state={
 }
   }
   
-  handleSubmit= (e)=>{
- 
-    e.preventDefault();
+   handleSubmit =async (e) =>{
+    // creating packages from the user inputs 
     let packages = [];
     for (var i = this.state.from; i <= this.state.to; i++) {
         packages.push(this.state.prefix + i);
         this.setState({
           names : packages
         })
-    
       }
   
 const db = firebase.firestore()
 
 this.state.names.map((name)=>{
-
-  if(this.state.id1 != '' && this.state.id1  ){
+// case-1 : adding packages and assigning them immediately to the users
+  if(this.state.id1 !== '' && this.state.id1  && this.state.id1 !== "Select" ){
 
     //getting details of user
-    db.collection('users').doc(this.state.id1).get()
-    .then((res) =>{
-      console.log(res.data().email)
+  /*   db.collection('users').doc(this.state.id1).get()
+    .finally((res) =>{
     this.setState({
       email : res.data().email
     })
     })
-
-
-// adding kits to packages
+*/
+// adding packages into db
 db.collection('packages').doc(name).set({
   name: name,
   check: false,
   userId:this.state.id1,
-  email :this.state.email
+  //email :this.state.email
 })
-.then(( res)=>{
+.finally(( res)=>{
 console.log("Succefully inserted packages" ,res)
 })
 .catch((err) => {
   console.log("error occured" ,err)
 });
 
-
-
-// assigning kits to user
+// assigning packages to users into db
 db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
       name: name,
       check : false
-    }, {merge : true}).then(( res)=>{
+    }, {merge : true}).finally(( res)=>{
       console.log("Succefully assigned Packages" , res)
         })
         .catch((err) => {
@@ -78,15 +72,15 @@ db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(na
         });
 
 }else{
-
-  // adding kits to packages
+//case 2: only adds packages and assign it to user later on
+  // adding packages into db
 db.collection('packages').doc(name).set({
   name: name,
   check: true,
   userId:this.state.id1,
-  email :this.state.email
+  //email :this.state.email
 })
-.then(( res)=>{
+.finally(( res)=>{
 console.log("Succefully inserted packages" ,res)
 })
 .catch((err) => {
@@ -95,6 +89,7 @@ console.log("Succefully inserted packages" ,res)
 }  
 
 })
+e.preventDefault()
 
 }
 
@@ -122,7 +117,6 @@ handleChange = (e)=>{
       this.setState({
         [e.target.name] :e.target.value
         })
-        console.log("test",e.target.value)
       }
 
 
@@ -155,7 +149,7 @@ handleChange = (e)=>{
 <label htmlFor="exampleInputPassword1">Select User</label>
 <br/>       
 <select 
-className="dropdown-toggle"
+className="browser-default custom-select"
 name = "id1"
 value={this.state.id1} 
 onChange={this.handleChange} 

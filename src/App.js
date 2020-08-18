@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import '../node_modules/bootstrap/dist/js/bootstrap.js'
-import Popper from 'popper.js'
 import Header from './components/layout/header';
 import Retailers from './components/dashboard/retailer/listRetailers';
 import Packages from './components/dashboard/packages/packages'
@@ -19,12 +18,14 @@ import logout from './components/misc/logout'
 import firebase from './config/fire'
 import search from './components/dashboard/search'
 function AuthenticatedRoute({component: Component, authenticated, ...rest}) {
+  console.log("inside private route function " , authenticated)
   return (
     <Route
       {...rest}
-      render={(props) => authenticated === true
-          ? <Component {...props} {...rest} />
-          : <Redirect to="/" /> } />
+      render={(props) => authenticated === null
+          ?   <Redirect to={{pathname: '/login', state: {from: props.location}}} />
+          : <Component {...props} {...rest} />
+        } />
   )
 }
 
@@ -35,7 +36,7 @@ class App extends Component {
     super();
     this.setCurrentUser = this.setCurrentUser.bind(this);
    this.state = {
-      authenticated: false,
+      authenticated: null,
       currentUser: null,
     };
   }
@@ -46,29 +47,34 @@ class App extends Component {
         currentUser: u,
         authenticated: true
       })
+      
+console.log(this.state.authenticated , "inside auth chnged true condn")
     } else {
       this.setState({
         currentUser: null,
-        authenticated: false
+        authenticated: null
       })
+    
+console.log(this.state.authenticated , "inside auth chnged false condn")
     }
   }
   
-  componentWillMount() {
+  componentDidMount() {
     this.removeAuthListener = firebase.auth().onAuthStateChanged((u) => {
       if (u) {
         this.setState({
           authenticated: true,
           currentUser: u,
         })
-
+console.log(this.state.authenticated , "inside auth chnged true condn")
    
       } else {
         this.setState({
-          authenticated: false,
+          authenticated: null,
           currentUser: null,
         })
 
+        console.log(this.state.authenticated , "inside auth chnged false condn")
       }
     })
   }
@@ -99,9 +105,13 @@ class App extends Component {
       exact path='/assignPackage/:id' 
       component={AssignPackage} />
       
-      <AuthenticatedRoute authenticated={this.state.authenticated} exact path='/showUser/:id' component={UserDetail} />
+      <AuthenticatedRoute 
+      authenticated={this.state.authenticated}
+       exact path='/showUser/:id' 
+       component={UserDetail} />
       
-      <AuthenticatedRoute authenticated={this.state.authenticated}
+      <AuthenticatedRoute
+       authenticated={this.state.authenticated}
        exact path = "/showPackage/:id" 
        component = {PackageDetail}/>
 <AuthenticatedRoute
@@ -109,8 +119,11 @@ class App extends Component {
   exact path='/search' 
   component={search}/>
      
-      <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/addPackages" component = {addPackage} />
-      <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/logout" component ={logout}/>
+      <AuthenticatedRoute 
+      authenticated={this.state.authenticated} 
+      exact path = "/addPackages" 
+      component = {addPackage} />
+      <Route  exact path = "/logout" component ={logout}/>
      
       
       <Route  component = {NotFound} /> 

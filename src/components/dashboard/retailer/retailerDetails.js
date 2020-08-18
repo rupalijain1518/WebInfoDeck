@@ -91,24 +91,24 @@ return (
 
 
 
-  <div class="card text-center" styles="width: 18rem;">
+  <div className="card text-center" styles="width: 18rem;">
       <br/>
 <center>  {this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="..." class="rounded" height="170px" width="170px"/> : "No picture"}
      </center>
-  <div class="card-body">
-  <h5 class="card-title">{this.state.user.name} </h5>
-  <p class="card-text"><small class="text-muted">{this.state.user.email}</small></p>
+  <div className="card-body">
+  <h5 className="card-title">{this.state.user.name} </h5>
+  <p className="card-text"><small className="text-muted">{this.state.user.email}</small></p>
   </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">User Id :{this.state.key1}</li>
+  <ul className="list-group list-group-flush">
+    <li className="list-group-item">User Id :{this.state.key1}</li>
     
-    <li class="list-group-item">{this.state.user.phone}</li>
-    <li class="list-group-item">{this.state.user.address}</li>
-    <li class="list-group-item">{this.state.user.location ? this.state.user.location : "Not Available"}</li>
+    <li className="list-group-item">{this.state.user.phone}</li>
+    <li className="list-group-item">{this.state.user.address}</li>
+    <li className="list-group-item">{this.state.user.location ? this.state.user.location : "Not Available"}</li>
   </ul>
-  <div class="card-body">
-  <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
-     <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+  <div className="card-body">
+  <button onClick={this.props.history.goBack} className="btn btn-secondary">Back</button> &nbsp;&nbsp;
+     <button onClick={this.delete.bind(this, this.state.key)} className="btn btn-danger">Delete</button>
   </div>
   
          
@@ -133,11 +133,11 @@ return (
                 </tr>
               </thead>
               <tbody>
-                {this.state.gst1.map(key =>
-                  <tr>
-                    <td>{key.tradeNam}</td>
-                    <td>{key.sts}</td>
-                    <td>{key.addr}</td>
+                {this.state.gst1.map(key1 =>
+                  <tr key={key1.key}> 
+                    <td>{key1.tradeNam}</td>
+                    <td>{key1.sts}</td>
+                    <td>{key1.addr}</td>
                   </tr>
                 )}
               </tbody>
@@ -156,9 +156,9 @@ return (
                 </tr>
               </thead>
               <tbody>
-                {this.state.packages.map(key =>
-                  <tr>
-                    <td>{key.keyPack}</td>
+                {this.state.packages.map(key1 =>
+                  <tr key={key1.key}>
+                    <td>{key1.keyPack}</td>
                  
                   </tr>
                 )}

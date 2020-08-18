@@ -64,22 +64,22 @@ return (
         <div className="row">
           <div className="col s12 m6">
             
-          <div class="card text-center" styles="width: 18rem;">
+          <div className="card text-center" styles="width: 18rem;">
       <br/>
-<center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="" class="rounded" height="170px" width="170px"/> : "No picture"}
+<center>{this.state.user.profileUrl ? <img src={this.state.user.profileUrl} alt="" className="rounded" height="170px" width="170px"/> : "No picture"}
 </center>
-  <div class="card-body">
-  <h5 class="card-title">{this.state.user.name} </h5>
-  <p class="card-text"><small class="text-muted">{this.state.user.email}</small></p>
+  <div className="card-body">
+  <h5 className="card-title">{this.state.user.name} </h5>
+  <p className="card-text"><small className="text-muted">{this.state.user.email}</small></p>
   </div>
-  <ul class="list-group list-group-flush">
-  {this.state.user.phone? <li class="list-group-item"> {this.state.user.phone} </li>: null}
-  {this.state.user.address? <li class="list-group-item"> {this.state.user.address} </li>: null}
-  {this.state.user.location? <li class="list-group-item"> {this.state.user.location} </li>: null}
+  <ul className="list-group list-group-flush">
+  {this.state.user.phone? <li className="list-group-item"> {this.state.user.phone} </li>: null}
+  {this.state.user.address? <li className="list-group-item"> {this.state.user.address} </li>: null}
+  {this.state.user.location? <li className="list-group-item"> {this.state.user.location} </li>: null}
   </ul>
-  <div class="card-body">
-  <button onClick={this.props.history.goBack} class="btn btn-secondary">Back</button> &nbsp;&nbsp;
-     <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+  <div className="card-body">
+  <button onClick={this.props.history.goBack} className="btn btn-secondary">Back</button> &nbsp;&nbsp;
+     <button onClick={this.delete.bind(this, this.state.key)} className="btn btn-danger">Delete</button>
   </div>
           </div>
          
@@ -96,9 +96,9 @@ return (
                 </tr>
               </thead>
               <tbody>
-                {this.state.packages.map(key =>
-                  <tr>
-                    <td>{key.keyPack}</td>
+                {this.state.packages.map(key1 =>
+                  <tr key = {key1.key}>
+                    <td>{key1.keyPack}</td>
                   </tr>
                 )}
               </tbody>

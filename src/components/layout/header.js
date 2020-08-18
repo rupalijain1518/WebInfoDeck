@@ -12,7 +12,7 @@ render(){
     
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <a className="navbar-brand" >InfoDeck</a>
-      {this.props.authenticated       ?  <LoggedInLinks/> :<LogoutLinks/> }
+      {this.props.authenticated  === null || false     ?  <LogoutLinks/> :<LoggedInLinks/> }
     </nav>
     )
     

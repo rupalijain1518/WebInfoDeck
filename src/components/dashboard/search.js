@@ -1,23 +1,64 @@
 import React, { Component } from 'react';
 import firebase from 'firebase/app';
-import 'firebase/firestore';
-import SearchResult from './searchResult'
+import {Switch} from '@material-ui/core'
 
+import 'firebase/firestore';
+import {Link} from  'react-router-dom'
 class ListUsers extends Component {
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection('users');
 this.updateSearch = this.updateSearch.bind(this)
-        
+this.handleSubmit = this.handleSubmit.bind(this)
+this.handleChange = this.handleChange.bind(this)
+      
 this.unsubscribe = null;
     this.state = {
       users: [],
+      id1:'',
       search :''
+    
     };
   }
 
+  onCollectionRetailers = (querySnapshot) => {
+    const users = [];
+    querySnapshot.forEach((doc) => {
+      const {  name , profilrUrl , userName , gst , retailerId  , userId  , address , phone , location} = doc.data();
+      users.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name , 
+        profilrUrl , 
+        userName , 
+        gst ,
+        retailerId  , 
+        userId  ,
+        address ,
+        phone ,
+        location});
+    });
+    this.setState({
+      users
+   });
+  }
 
-  onCollectionUpdate = (querySnapshot) => {
+  onCollectionPackages = (querySnapshot) => {
+    const users = [];
+    querySnapshot.forEach((doc) => {
+      const { name , check } = doc.data();
+      users.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name,
+        check
+      });
+    });
+    this.setState({
+      users
+   });
+  }
+
+  onCollectionUsers = (querySnapshot) => {
     const users = [];
     querySnapshot.forEach((doc) => {
       const { name , email , address , phone , location} = doc.data();
@@ -35,16 +76,41 @@ this.unsubscribe = null;
       users
    });
   }
+  handleSubmit = async (e) =>{
+    
+  e.preventDefault();
+   if(this.state.id1 === 'users'){
+    const db = firebase.firestore();
+    await db.collection(this.state.id1).orderBy("name", "asc").onSnapshot(this.onCollectionUsers);
+  }
+  else if(this.state.id1 === 'retailersList'){
+    const db = firebase.firestore();
+    await db.collection(this.state.id1).orderBy("name", "asc").onSnapshot(this.onCollectionRetailers);  
+  }else if(this.state.id1 === 'packages') {
+    const db = firebase.firestore();
+    await db.collection(this.state.id1).orderBy("name", "asc").onSnapshot(this.onCollectionPackages);  
+  }else{
+  }
+  }
+  
+handleChange = (e)=>{
+  this.setState({
+    [e.target.name] :e.target.value
+    })
+console.log(this.state.id1)
+  }
 updateSearch = (e) =>{
     this.setState({
         search :e.target.value
     })
-}
 
-
-  componentDidMount() {
-    this.unsubscribe = this.ref.orderBy("name", "asc").onSnapshot(this.onCollectionUpdate);
   }
+
+
+  componentDidMount() {  
+    //  this.unsubscribe = firebase.firestore().
+      //collection('users').orderBy("name", "asc").onSnapshot(this.onCollectionUpdate);
+    }
 
   render() {
     const { search } = this.state;
@@ -53,39 +119,132 @@ updateSearch = (e) =>{
     });
 
     return(
-      <div >
-      <br/>
+      <div>
+        <div>   <form onSubmit={this.handleSubmit}>
+    <br/>
+    
+   <label htmlFor="exampleInputEmail1">Select option </label>
+    <br/>
+      <select 
+className="browser-default custom-select"
+name = "id1"
+value={this.state.id1} 
+onChange={this.handleChange} 
+> 
+      <option key ="Select" value ="Select" >  Select </option>
+      <option   key = "packages" value="packages">Packages</option>
+      <option   key = "users" value="users">Users</option>
+      <option   key = "retailersList" value="retailersList">Retailers</option>
       
-      <form class="form-inline">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-          aria-label="Search"
-          name="search" value={this.state.search} 
-      onChange = {this.updateSearch}/>
-      </form>
-         
-              <table className="table table-striped table-sm">
-                <thead className ="table-striped">
-                   <tr>
-                        <th>User Id </th>
-                        <th>User Name</th>
-                        <th>User Email</th>     
-                        <th>Detail</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {filtered.map(user => 
-                    <tr>
-                    <td> {user.key}</td>  
-                    <td> {user.name}</td>  
-                    <td> {user.email}</td>  
-                     </tr>
-                    )}
-                    </tbody>
-                  </table>
+      </select>
+      <div> 
+      <br/>
+<button type="submit" className="btn btn-primary">Submit</button> </div>
+   </form> 
+   </div>
+   <br/>
+   <div className="input-group">
+    <input id="email" type="text" className="form-control"  placeholder="Search .."  
+    name="search" 
+    value={this.state.search} 
+    onChange = {this.updateSearch}/>
+      <br/>
+  </div>
+        
+  {this.state.id1 === 'users'  ? <div>
+       <br/>
+  <table className="table">
+        <thead className="thead-dark">
+             <tr>
+                  <th> User Id </th>
+                  <th>User Name</th>
+                  <th>User Email</th>
+                  
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(user =>
+                  <tr key ={user.key}> 
+                    <td> {user.key} </td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td> <Link to={`/showUser/${user.key}`} className="btn btn-secondary">View</Link> </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+      : this.state.id1 === 'packages' ? <div>
+      <br/>
+ <table className="table">
+       <thead className="thead-dark">
+       <tr>
+                  <th>Package Id</th>
+                  <th>View Package</th>
+                  <th>Assign </th>
+                  <th>Activate </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(pack =>
+                  <tr key ={pack.key}>
+                    <td>{pack.key}</td>
+                    <td><Link to={`/showPackage/${pack.key}`} className="btn btn-secondary">View</Link></td>
+                <td>  
+                   {pack.check === true ? 
+                   <Link to={`/assignPackage/${pack.key}`}   
+                   className="btn btn-secondary">Assign</Link> : 
+                   <label htmlFor="exampleInputEmail1">Assigned</label>
+                   }
+                </td>
+
+                <td> 
+  <Switch 
+  id = "activate" 
+  size = "medium" 
+  color= "primary" 
+  value = {this.state.display} 
+  onChange={this.toggleHandler}/>
+                </td>
+                 
+                  </tr>
+                )}
+              </tbody>
+            
+           </table>
+         </div>
+     : <div>
+     <br/>
+<table className="table">
+<thead className ="table-striped">
+             <tr>
+                  <th> Retailer Id </th>
+                  <th>Retailer Name</th>
+                  <th>User Id</th>
+                  <th>User Name</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(user =>
+                  <tr key ={user.key}>
+                    <td> {user.key} </td>
+                    <td>{user.name}</td>
+                    <td>{user.userId}</td>
+                    <td>{user.userName}</td>
+                    <td> <Link to={`/showRetailer/${user.key}`} className="btn btn-secondary">View</Link> </td>
+                  </tr>
+                )}
+              </tbody>
+                 </table>
+        </div>
+   }
+   
                   </div>        
          
       );
   }}
+
 
 export default ListUsers;
