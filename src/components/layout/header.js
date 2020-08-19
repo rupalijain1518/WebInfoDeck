@@ -7,7 +7,6 @@ class Header extends Component{
   }
 
 render(){
-  console.log( "authhh",this.props.authenticated)
   return(    
     
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

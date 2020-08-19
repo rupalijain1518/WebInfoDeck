@@ -18,14 +18,14 @@ import logout from './components/misc/logout'
 import firebase from './config/fire'
 import search from './components/dashboard/search'
 function AuthenticatedRoute({component: Component, authenticated, ...rest}) {
-  console.log("inside private route function " , authenticated)
   return (
     <Route
       {...rest}
-      render={(props) => authenticated === null
-          ?   <Redirect to={{pathname: '/login', state: {from: props.location}}} />
-          : <Component {...props} {...rest} />
-        } />
+      render=
+      {(props) => authenticated === true?  <Component {...props} {...rest} />       
+      :   authenticated === null?  <Component {...props} {...rest} /> : <Redirect to={{pathname: '/login', state: {from: props.location}}} /> 
+      }
+   />
   )
 }
 
@@ -47,15 +47,11 @@ class App extends Component {
         currentUser: u,
         authenticated: true
       })
-      
-console.log(this.state.authenticated , "inside auth chnged true condn")
     } else {
       this.setState({
         currentUser: null,
         authenticated: null
       })
-    
-console.log(this.state.authenticated , "inside auth chnged false condn")
     }
   }
   
@@ -66,15 +62,11 @@ console.log(this.state.authenticated , "inside auth chnged false condn")
           authenticated: true,
           currentUser: u,
         })
-console.log(this.state.authenticated , "inside auth chnged true condn")
-   
-      } else {
+  } else {
         this.setState({
           authenticated: null,
           currentUser: null,
         })
-
-        console.log(this.state.authenticated , "inside auth chnged false condn")
       }
     })
   }
