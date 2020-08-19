@@ -13,7 +13,7 @@ class AddPackages extends Component{
     this.handleChange = this.handleChange.bind(this)
 this.state={
   names :[], from : '',  to : '',  prefix: '',  id1 : '',  email:'',  check : true,
-    users:[],key:''
+    users:[],key:'' ,  error : null
 }
   }
 
@@ -31,8 +31,10 @@ handleSubmit = (e) =>{
 this.state.names.map((name)=>{
      
     if(this.state.id1 === '' || this.state.id1 === 'Select'){
-
-      db.collection('packages').doc(name).set({
+this.setState({
+  error : "Please select user"
+})
+    /*  db.collection('packages').doc(name).set({
         name: name,
         check: true,
       })
@@ -42,9 +44,10 @@ this.state.names.map((name)=>{
       .catch((err) => {
         console.log("error occured" ,err)
       });
-    
+*/    
 
-    }else{
+    }
+    else{
 
 
    //getting details of user
@@ -55,7 +58,7 @@ this.state.names.map((name)=>{
     })
     })
 */
-// adding packages into db
+//adding packages into db
 db.collection('packages').doc(name).set({
   name: name,
   check: false,
@@ -141,8 +144,12 @@ handleChange = (e)=>{
 
 <div>
 <label htmlFor="exampleInputPassword1">Select User</label>
-<br/>       
+<br/>
+
+{this.state.error ? <p className="text-danger">{this.state.error}</p> : null}
+			
 <select 
+placeholder = "select you choice"
 className="browser-default custom-select"
 name = "id1"
 value={this.state.id1} 
