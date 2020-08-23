@@ -17,13 +17,14 @@ import RetailerDetail from './components/dashboard/retailer/retailerDetails'
 import logout from './components/misc/logout'
 import firebase from './config/fire'
 import search from './components/dashboard/search'
+import LoggedInLinks from './components/layout/loggedInLinks';
 function AuthenticatedRoute({component: Component, authenticated, ...rest}) {
   return (
     <Route
       {...rest}
       render=
       {(props) => authenticated === true?  <Component {...props} {...rest} />       
-      :   authenticated === null?  <Component {...props} {...rest} /> : <Redirect to={{pathname: '/login', state: {from: props.location}}} /> 
+    /*  :   authenticated === null?  <Component {...props} {...rest} /> */: <Redirect to={{pathname: '/login', state: {from: props.location}}} /> 
       }
    />
   )
@@ -89,6 +90,8 @@ class App extends Component {
      <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/packages" component = {Packages} />
      
      <AuthenticatedRoute authenticated={this.state.authenticated} exact path = "/addPackages" component = {addPackage} />
+     <AuthenticatedRoute authenticated={this.state.authenticated} 
+     exact path = "/search" component = {search} />
      
       <AuthenticatedRoute authenticated={this.state.authenticated} exact path='/showRetailer/:id' component={RetailerDetail} />
       
@@ -106,10 +109,7 @@ class App extends Component {
        authenticated={this.state.authenticated}
        exact path = "/showPackage/:id" 
        component = {PackageDetail}/>
-<AuthenticatedRoute
- authenticated={this.state.authenticated} 
-  exact path='/search' 
-  component={search}/>
+
      
       <AuthenticatedRoute 
       authenticated={this.state.authenticated} 

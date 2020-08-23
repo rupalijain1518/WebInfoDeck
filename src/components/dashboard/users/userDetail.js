@@ -13,7 +13,6 @@ class UserDetail extends Component{
   }
 
   onCollectionUpdate = (querySnapshot) => {
-    console.log("into assigned packages")
     const packages = [];
     querySnapshot.forEach((doc) => {
     
