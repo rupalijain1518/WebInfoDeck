@@ -17,7 +17,7 @@ this.state={
 }
   }
 
-handleSubmit = (e) =>{
+handleSubmit = async (e) =>{
   e.preventDefault()
 
   let packages = [];
@@ -25,15 +25,15 @@ handleSubmit = (e) =>{
         packages.push(this.state.prefix + i);
         this.setState({
           names : packages
-        })
+        } ,()=>{})
       }
-      const db =firebase.firestore()
-this.state.names.map((name)=>{
+const db =firebase.firestore()
+this.state.names.map(async (name)=>{
      
-    if(this.state.id1 === '' || this.state.id1 === 'Select'){
+if(this.state.id1 === '' || this.state.id1 === 'Select'){
 this.setState({
   error : "Please select user"
-})
+},()=>{})
     /*  db.collection('packages').doc(name).set({
         name: name,
         check: true,
@@ -59,7 +59,7 @@ this.setState({
     })
 */
 //adding packages into db
-db.collection('packages').doc(name).set({
+await db.collection('packages').doc(name).set({
   name: name,
   check: false,
   userId:this.state.id1,
@@ -73,7 +73,7 @@ console.log("Succefully inserted packages" ,res)
 });
 
 // assigning packages to users into db
-db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
+await db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
       name: name,
       check : false
     }, {merge : true}).finally(( res)=>{
@@ -82,9 +82,7 @@ db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(na
         .catch((err) => {
           console.log("error occured" , err)
         });
-
-
-    }
+}
 
 })
 }
@@ -102,18 +100,13 @@ db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(na
     });
     this.setState({
       users
-   });
+   } , ()=>{});
   }
-
-  componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-  }
-
 
 handleChange = (e)=>{
       this.setState({
         [e.target.name] :e.target.value
-        })
+        },()=>{})
       }
 
 
