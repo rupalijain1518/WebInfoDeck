@@ -17,7 +17,7 @@ import RetailerDetail from './components/dashboard/retailer/retailerDetails'
 import logout from './components/misc/logout'
 import firebase from './config/fire'
 import search from './components/dashboard/search'
-import LoggedInLinks from './components/layout/loggedInLinks';
+import ListPackage from './components/dashboard/packages/ListPackage';
 function AuthenticatedRoute({ component: Component, authenticated, ...rest }) {
   return (
     <Route
@@ -85,10 +85,11 @@ class App extends Component {
             <Route exact path='/' render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
             <Route exact path="/login" render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
 
+            <Route exact path="/index.html" render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
             <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/users" component={listUsers} />
             <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/retailers" component={Retailers} />
-            <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/packages" component={Packages} />
-
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/addPackages" component={Packages} />
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/listPackages" component={ListPackage} />
             <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/addPackages" component={addPackage} />
             <AuthenticatedRoute authenticated={this.state.currentUser}
               exact path="/search" component={search} />
@@ -96,10 +97,9 @@ class App extends Component {
             <AuthenticatedRoute authenticated={this.state.currentUser} exact path='/showRetailer/:id' component={RetailerDetail} />
 
             <AuthenticatedRoute
-              authenticated={this.state.currentUser}
-              exact path='/assignPackage/:id'
+              authenticated={this.state.authenticated}
+              exact path='/assignPackages'
               component={AssignPackage} />
-
             <AuthenticatedRoute
               authenticated={this.state.currentUser}
               exact path='/showUser/:id'
@@ -120,7 +120,6 @@ class App extends Component {
 
             <Route component={NotFound} />
           </Switch>
-
         </Router>
       </div>
     );

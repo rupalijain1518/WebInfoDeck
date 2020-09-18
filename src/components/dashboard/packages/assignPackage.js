@@ -1,73 +1,167 @@
-import React , {Component}from 'react';
+import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-class AssignPackage extends Component{
-  
-  constructor() {
-    super();
-  
-  
+import { Link } from '@material-ui/core';
+class AssignPackages extends Component {
+
+  constructor(props) {
+    super(props);
+    this.ref = firebase.firestore().collection('users');
+    this.unsubscribe = null;
+
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.state = {
+      names: [], from: '', to: '', prefix: '', id1: undefined, email: '', check: true,
+      users: [], key: '', error: null, status: null
+    }
   }
-  
-  state={
-    id1:"",
-    key: '',
-    email : ''  
+
+  handleSubmit = (e) => {
+
+    let packages = [];
+    for (var i = this.state.from; i <= this.state.to; i++) {
+      packages.push(this.state.prefix + i);
+      this.setState({
+        names: packages
+      })
+    }
+
+    console.log("submitt")
+    const db = firebase.firestore()
+
+
+
+
+
+
+    this.state.names.map(async (name) => {
+
+      await db.collection('users').doc(this.state.id1).get()
+        .then((res) => {
+          this.setState({
+            email: res.data().email
+          })
+        })
+
+      await db.collection('packages').doc(name).set({
+        name: name,
+        check: false,
+        userId: this.state.id1,
+        email: this.state.email
+      })
+        .finally((res) => {
+
+          this.setState({
+            status: true
+          })
+          console.log("Succefully inserted packages")
+        })
+        .catch((err) => {
+          console.log("error occured", err)
+        });
+
+      // assigning packages to users into db
+      await db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(name).set({
+        name: name,
+        check: false
+      }, { merge: true }).finally((res) => {
+
+        this.setState({
+          names: null,
+          id1: null,
+          status: true
+        })
+
+      })
+        .catch((err) => {
+          console.log("error occured", err)
+        });
+    })
+    e.preventDefault()
   }
-    
-  handleSubmit = async (e) =>{
-    
-  e.preventDefault();
- 
-  const db = firebase.firestore();
 
+  onCollectionUpdate = (querySnapshot) => {
+    const users = [];
+    querySnapshot.forEach((doc) => {
+      const { name } = doc.data();
+      users.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name
+      });
+    });
+    this.setState({
+      users
+    });
+  }
 
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
 
-  await db.collection('users').doc(this.state.id1).get()
-  .then((res) =>{
-  this.setState({
-    email : res.data().email
-  })
-  })
-  await db.collection('users').doc(this.state.id1).collection('assignedpackages').doc(this.props.match.params.id).set({
-    name: this.props.match.params.id,
-    check: false,
-  }, {merge : true}); 
- 
-  await db.collection("packages").doc(this.props.match.params.id).set({
-    check : false,
-    email : this.state.email,
-    id1 : this.state.id1
-  }, {merge : true})
-  
-console.log(" detialss" ,this.state.email , this.state.id1)
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+      status: false
+    })
+  }
 
-  this.props.history.push("/packages")
-   
-}
-handleChange = (e)=>{
-  this.setState({
-    id1 :e.target.value
-  })
-}
-    render(){
-     return(
-       <div> 
-         <br/>
-         <h1>Assign Package</h1>
-         <br/>
-      <form onSubmit={this.handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="exampleInputPassword1">Enter User's ID</label>
-        <input required type="text"  value={this.state.id1} onChange={this.handleChange} className="form-control" id="name" placeholder="User's id number"/>
-      </div>
-      <button type="submit" className="btn btn-primary">Submit</button>
-    </form>
-  </div>
+  render() {
+    return (
+      <div>
+        <br />
+        <h1>Assign Package</h1>
+        <br />
+        {this.state.status ? <div className="alert alert-success" role="alert">
+          Packages added
+        </div> : null}
+        <div>
+          <form onSubmit={this.handleSubmit}>
+
+            <div className="form-group">
+              <label htmlFor="exampleInputPassword1">Enter kit's prefix</label>
+              <input required type="text" value={this.state.prefix} onChange={this.handleChange} className="form-control" id="prefix" name="prefix" placeholder="Kit serial Number" />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="exampleInputPassword1">From</label>
+              <input required type="text" value={this.state.from} onChange={this.handleChange} className="form-control" id="from" name="from" placeholder="Kit serial Number" />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="exampleInputPassword1">To</label>
+              <input required type="text" value={this.state.to} onChange={this.handleChange} className="form-control" id="to" name="to" placeholder="Kit serial Number" />
+            </div>
+
+            <div>
+              <label htmlFor="exampleInputPassword1">Select User</label>
+              <br />
+
+              {this.state.error ? <p className="text-danger">{this.state.error}</p> : null}
+
+              <select
+                placeholder="select your choice"
+                className="browser-default custom-select"
+                name="id1"
+                value={this.state.id1}
+                onChange={this.handleChange}
+              >
+                <option key='undefined' value="undefined" > Select </option>
+                {this.state.users.map((user, key) =>
+
+                  <option key={user.key} value={user.key}>{user.name}</option>
+                )}</select>
+            </div>
+            <br />
+            <div className="form-group">
+              <button type="submit" onClick={this.handleSubmit} className="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div >
     );
   }
-  }
-  
-  export default AssignPackage ;
+}
+
+export default AssignPackages;
