@@ -18,13 +18,15 @@ import logout from './components/misc/logout'
 import firebase from './config/fire'
 import search from './components/dashboard/search'
 import ListPackage from './components/dashboard/packages/ListPackage';
+import AssignPackage1 from './components/dashboard/packages/assignPackage1';
+import DeletePackages from './components/dashboard/packages/deletePackage';
 function AuthenticatedRoute({ component: Component, authenticated, ...rest }) {
   return (
     <Route
       {...rest}
       render=
-      {(props) => authenticated === false || null ? <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-    /*  :   authenticated === null?  <Component {...props} {...rest} /> */ : <Component {...props} {...rest} />
+      {(props) => authenticated === true ? <Component {...props} {...rest} />
+        : authenticated === null ? <Component {...props} {...rest} /> : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
       }
     />
   )
@@ -37,7 +39,7 @@ class App extends Component {
     super();
     this.setCurrentUser = this.setCurrentUser.bind(this);
     this.state = {
-      authenticated: false,
+      authenticated: null,
       currentUser: null,
     };
   }
@@ -45,13 +47,13 @@ class App extends Component {
   setCurrentUser(u) {
     if (u) {
       this.setState({
-        currentUser: true,
+        currentUser: u,
         authenticated: true
       })
     } else {
       this.setState({
-        currentUser: false,
-        authenticated: false
+        currentUser: null,
+        authenticated: null
       })
     }
   }
@@ -61,12 +63,12 @@ class App extends Component {
       if (u) {
         this.setState({
           authenticated: true,
-          currentUser: true,
+          currentUser: u,
         })
       } else {
         this.setState({
-          authenticated: false,
-          currentUser: false,
+          authenticated: null,
+          currentUser: null,
         })
       }
     })
@@ -85,34 +87,48 @@ class App extends Component {
             <Route exact path='/' render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
             <Route exact path="/login" render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
 
-            <Route exact path="/index.html" render={(props) => { return <Login setCurrentUser={this.setCurrentUser} {...props} /> }} />
-            <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/users" component={listUsers} />
-            <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/retailers" component={Retailers} />
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/users" component={listUsers} />
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/retailers" component={Retailers} />
             <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/addPackages" component={Packages} />
             <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/listPackages" component={ListPackage} />
-            <AuthenticatedRoute authenticated={this.state.currentUser} exact path="/addPackages" component={addPackage} />
-            <AuthenticatedRoute authenticated={this.state.currentUser}
-              exact path="/search" component={search} />
 
-            <AuthenticatedRoute authenticated={this.state.currentUser} exact path='/showRetailer/:id' component={RetailerDetail} />
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path="/addPackages" component={addPackage} />
+
+            <AuthenticatedRoute authenticated={this.state.authenticated} exact path='/showRetailer/:id' component={RetailerDetail} />
 
             <AuthenticatedRoute
               authenticated={this.state.authenticated}
               exact path='/assignPackages'
               component={AssignPackage} />
+
             <AuthenticatedRoute
-              authenticated={this.state.currentUser}
+              authenticated={this.state.authenticated}
+              exact path='/deletePackages'
+              component={DeletePackages} />
+
+            <AuthenticatedRoute
+              authenticated={this.state.authenticated}
+              exact path='/assignPackage/:id'
+              component={AssignPackage1} />
+
+            <AuthenticatedRoute
+              authenticated={this.state.authenticated}
               exact path='/showUser/:id'
               component={UserDetail} />
 
             <AuthenticatedRoute
-              authenticated={this.state.currentUser}
+              authenticated={this.state.authenticated}
               exact path="/showPackage/:id"
               component={PackageDetail} />
 
+            <AuthenticatedRoute
+              authenticated={this.state.authenticated}
+              exact path="/search"
+              component={search} />
+
 
             <AuthenticatedRoute
-              authenticated={this.state.currentUser}
+              authenticated={this.state.authenticated}
               exact path="/addPackages"
               component={addPackage} />
             <Route exact path="/logout" component={logout} />
@@ -120,6 +136,7 @@ class App extends Component {
 
             <Route component={NotFound} />
           </Switch>
+
         </Router>
       </div>
     );

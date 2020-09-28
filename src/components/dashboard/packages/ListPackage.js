@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Link } from 'react-router-dom'
 import React, { Component } from 'react'
+import Pagination from '../Pagination'
 import { Switch } from '@material-ui/core'
 class ListPackage extends Component {
   constructor(props) {
@@ -13,17 +14,45 @@ class ListPackage extends Component {
     this.state = {
       packages: [],
       display: false,
-      search: ''
+      filtered: [],
+      trigger: true,
+      showPerPage: 20,
+      search: '',
+      Pagination: {
+        start: 0,
+        end: this.showPerPage
+      }
 
 
     };
   }
-  updateSearch = (e) => {
+  onPaginationChange = (start, end) => {
+    //console.log(this.state.pagination.start, "Testing Pagination")
     this.setState({
-      search: e.target.value
-    })
+      Pagination: {
+        start: start,
+        end: end
+      }
+    });
   }
 
+
+  updateSearch = (e) => {
+    this.setState({
+      search: e.target.value,
+      trigger: false
+    })
+    var v = this.state.search.length
+    if (v === 1) {
+      this.setState({
+        trigger: true
+      })
+    }
+    console.log(v);
+    console.log(this.state.search)
+    console.log(this.state.trigger)
+
+  }
   onCollectionUpdate = (querySnapshot) => {
     const packages = [];
     querySnapshot.forEach((doc) => {
@@ -47,15 +76,15 @@ class ListPackage extends Component {
     })
     console.log(this.state.display)
   }
-
-  componentDidMount() {
+  getitem = () => {
     this.unsubscribe = this.ref.orderBy("name", "asc").onSnapshot(this.onCollectionUpdate);
   }
 
   render() {
 
+    const trigger = this.state.trigger
     const { search } = this.state;
-    const filtered = this.state.packages.filter(user => {
+    this.state.filtered = this.state.packages.filter(user => {
       return user.name.toString().toLowerCase().indexOf(search.toString().toLowerCase()) !== -1;
     });
 
@@ -80,32 +109,70 @@ class ListPackage extends Component {
               <th>Activate </th>
             </tr>
           </thead>
-          <tbody>
-            {filtered.map(pack =>
-              <tr key={pack.key}>
-                <td>{pack.key}</td>
-                <td><Link to={`/showPackage/${pack.key}`} className="btn btn-secondary">View</Link></td>
-                <td>
-                  {pack.check === true ?
-                    <Link to={`/assignPackages`}
-                      className="btn btn-secondary">Assign</Link> :
-                    <label htmlFor="exampleInputEmail1">Assigned</label>
-                  }
-                </td>
+          {trigger ? (
+            <tbody>
+              {this.getitem()}
+              {this.state.filtered.slice(this.state.Pagination.start, this.state.Pagination.end).map(pack => {
+                return (
+                  <tr key={pack.key}>
+                    <td>{pack.key}</td>
+                    <td><Link to={`/showPackage/${pack.key}`} className="btn btn-secondary">View</Link></td>
+                    <td>
+                      {pack.check === true ?
+                        <Link to={`/assignPackage/${pack.key}`}
+                          className="btn btn-secondary">Assign</Link> :
+                        <label htmlFor="exampleInputEmail1">Assigned</label>
+                      }
+                    </td>
 
-                <td>
-                  <Switch
-                    id="activate"
-                    size="medium"
-                    color="primary"
-                    value={this.state.display}
-                    onChange={this.toggleHandler} />
-                </td>
+                    <td>
+                      <Switch
+                        id="activate"
+                        size="medium"
+                        color="primary"
+                        value={this.state.display}
+                        onChange={this.toggleHandler} />
+                    </td>
 
-              </tr>
-            )}
-          </tbody>
+                  </tr>
+                )
+              })
+              }
+            </tbody>) :
+            (<tbody>
+              {this.state.filtered.map(pack => {
+                return (
+                  <tr key={pack.key}>
+                    <td>{pack.key}</td>
+                    <td><Link to={`/showPackage/${pack.key}`} className="btn btn-secondary">View</Link></td>
+                    <td>
+                      {pack.check === true ?
+                        <Link to={`/assignPackage/${pack.key}`}
+                          className="btn btn-secondary">Assign</Link> :
+                        <label htmlFor="exampleInputEmail1">Assigned</label>
+                      }
+                    </td>
+
+                    <td>
+                      <Switch
+                        id="activate"
+                        size="medium"
+                        color="primary"
+                        value={this.state.display}
+                        onChange={this.toggleHandler} />
+                    </td>
+
+                  </tr>
+                )
+              })
+              }
+            </tbody>)}
         </table>
+
+        <Pagination
+          showPerPage={this.state.showPerPage}
+          onPaginationChange={this.onPaginationChange.bind(this)}
+          total={this.state.filtered.length} />
       </div>
 
     );

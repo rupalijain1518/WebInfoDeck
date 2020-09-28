@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Link } from 'react-router-dom'
+import Pagination from '../Pagination'
 
 class ListRetailers extends Component {
   constructor(props) {
@@ -10,9 +11,26 @@ class ListRetailers extends Component {
     this.unsubscribe = null;
     this.state = {
       users: [],
-      search: ''
+      search: '',
+      filtered: [],
+      trigger: true,
+      showPerPage: 7,
+      Pagination: {
+        start: 0,
+        end: this.showPerPage
+      }
 
     };
+  }
+  onPaginationChange = (start, end) => {
+    //console.log(this.state.pagination.start, "Testing Pagination")
+    this.setState({
+      Pagination: {
+        start: start,
+        end: end
+      }
+    });
+    console.log(this.state.Pagination.start, this.state.Pagination.end)
   }
 
   onCollectionUpdate = (querySnapshot) => {
@@ -35,24 +53,37 @@ class ListRetailers extends Component {
       });
     });
     this.setState({
-      users
+      users,
     });
   }
   updateSearch = (e) => {
     this.setState({
-      search: e.target.value
+      search: e.target.value,
+      trigger: false
     })
+    var v = this.state.search.length
+    if (v === 1) {
+      this.setState({
+        trigger: true
+      })
+    }
   }
 
-  componentDidMount() {
+  getitem = () => {
     this.unsubscribe = this.ref.orderBy("name", "asc").onSnapshot(this.onCollectionUpdate);
   }
 
+
+
   render() {
+    const trigger = this.state.trigger
     const { search } = this.state;
-    const filtered = this.state.users.filter(user => {
-      return user.name.toString().toLowerCase().indexOf(search.toString().toLowerCase()) !== -1;
+    this.state.filtered = this.state.users.filter(user => {
+      return user.userName.toString().toLowerCase().indexOf(search.toString().toLowerCase()) !== -1;
+
     });
+    console.log(this.state.filtered, "from component");
+    console.log(this.state.filtered, "from render");
 
     return (
       <div  > <br />
@@ -78,19 +109,44 @@ class ListRetailers extends Component {
               <th>Detail</th>
             </tr>
           </thead>
+          {trigger ? (
+            <tbody>
+              {this.getitem()}
+              {this.state.users.slice(this.state.Pagination.start, this.state.Pagination.end).map(user => {
+                return (
+                  <tr key={user.key}>
+                    <td> {user.key} </td>
+                    <td>{user.name}</td>
+                    <td>{user.userId}</td>
+                    <td>{user.userName}</td>
+                    <td> <Link to={`/showRetailer/${user.key}`} className="btn btn-secondary">View</Link> </td>
+                  </tr>
+                )
+              })
+              }
 
-          <tbody>
-            {filtered.map(user =>
-              <tr key={user.key}>
-                <td> {user.key} </td>
-                <td>{user.name}</td>
-                <td>{user.userId}</td>
-                <td>{user.userName}</td>
-                <td> <Link to={`/showRetailer/${user.key}`} className="btn btn-secondary">View</Link> </td>
-              </tr>
-            )}
-          </tbody>
+            </tbody>) :
+            (<tbody>
+
+              {this.state.filtered.map(user => {
+                return (
+                  <tr key={user.key}>
+                    <td> {user.key} </td>
+                    <td>{user.name}</td>
+                    <td>{user.userId}</td>
+                    <td>{user.userName}</td>
+                    <td> <Link to={`/showRetailer/${user.key}`} className="btn btn-secondary">View</Link> </td>
+                  </tr>
+                )
+              })
+              }
+
+            </tbody>)}
         </table>
+        <Pagination
+          showPerPage={this.state.showPerPage}
+          onPaginationChange={this.onPaginationChange.bind(this)}
+          total={this.state.filtered.length} />
       </div>
 
     );

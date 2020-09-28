@@ -37,6 +37,10 @@ class LoggedInLinks extends Component {
             <li className="nav-item">
               <NavLink className="nav-link" exact to="/assignPackages">Assign Packages</NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" exact to="/deletePackages">Delete Packages</NavLink>
+            </li>
+
 
             <li className="nav-item">
               <NavLink className="nav-link" exact to="/listPackages">List packages</NavLink>
